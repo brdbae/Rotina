@@ -286,7 +286,8 @@ body { background: #0f0f0f; color: #e5e5e5; min-height: 100vh; }
 
     <div id="m-refeicoes" class="m-section">
       <div class="m-ref-tabs">
-        <button class="m-ref-tab active" onclick="switchRefeicaoM('marmitas',this)">Marmitas</button>
+        <button class="m-ref-tab active" onclick="switchRefeicaoM('pAlmoco',this)">P. Almoço</button>
+        <button class="m-ref-tab" onclick="switchRefeicaoM('marmitas',this)">Marmitas</button>
         <button class="m-ref-tab" onclick="switchRefeicaoM('lanches',this)">Lanches</button>
         <button class="m-ref-tab" onclick="switchRefeicaoM('jantares',this)">Jantares</button>
         <button class="m-ref-tab" onclick="switchRefeicaoM('doces',this)">Doces</button>
@@ -500,6 +501,18 @@ const mTreinos = [
   {nome:"Upper Body",color:"#E05A5A",onde:"Casa ou exterior",duracao:"~45 min",desc:"Flexões em variantes, trabalho de costas com peso corporal e ombros. Sem ginásio, mas eficaz.",exercicios:["Flexões normais — 4x máximo (até à falha)","Flexões inclinadas (pés em cadeira) — 3x 8–10 reps","Flexões diamante — 3x 10 reps (tríceps)","Remada com toalha numa porta ou barra baixa — 4x 12 reps","Pike push-up (ombros) — 3x 10 reps","Dips numa cadeira — 3x 12 reps","Superman deitada — 3x 15 reps (lombar e costas)"]},
   {nome:"Full Body + Pesos",color:"#C084FC",onde:"Com acesso a pesos",duracao:"~55 min",desc:"O único dia com pesos. Aproveita para trabalhar cargas maiores em movimentos compostos. Maior estímulo muscular da semana.",exercicios:["Agachamento com halteres — 4x 12 reps","Romanian deadlift — 4x 12 reps","Remada curvada — 4x 10 reps","Press ombros sentada — 3x 12 reps","Supino halteres no chão — 3x 12 reps","Curl bíceps — 3x 12 reps","Extensão tríceps — 3x 12 reps","Farmers walk ou carregamento — 3x 30m ou 40s"]},
 ];
+const mPequenoAlmocos = [
+  {nome:"Aveia com leite + banana + mel",kcal:"~320 kcal",prot:"~12g",hidr:"~52g",gord:"~6g",ing:"Aveia 50g + leite 200ml + banana + mel",nota:"Adiciona canela por cima. Aqueces aveia com leite no micro-ondas 2 min e metes o resto por cima."},
+  {nome:"Ovos mexidos + tosta integral + fruta",kcal:"~380 kcal",prot:"~24g",hidr:"~32g",gord:"~16g",ing:"2 ovos mexidos + 2 tostas integrais + 1 peça de fruta",nota:"Proteína de manhã reduz snacking ao longo do dia. Rápido de fazer."},
+  {nome:"Iogurte grego + granola + frutos vermelhos",kcal:"~300 kcal",prot:"~18g",hidr:"~35g",gord:"~6g",ing:"Iogurte grego 150g + granola 30g + frutos vermelhos + mel",nota:"Rápido de preparar. Usa pouca granola — tem bastantes calorias mas dá textura crocante."},
+  {nome:"Pão integral + ovo cozido + queijo fresco",kcal:"~340 kcal",prot:"~20g",hidr:"~32g",gord:"~12g",ing:"2 fatias pão integral + 1 ovo cozido + queijo fresco + tomate",nota:"Versão melhorada do pequeno-almoço dela com mais proteína. Simples e equilibrado."},
+  {nome:"Panquecas de aveia com banana",kcal:"~350 kcal",prot:"~16g",hidr:"~45g",gord:"~8g",ing:"Aveia 50g + 1 ovo + banana + leite + canela",nota:"Bates tudo e fazes na frigideira. Bom para fins de semana quando tens mais tempo."},
+  {nome:"Batido de leite + banana + aveia",kcal:"~320 kcal",prot:"~12g",hidr:"~50g",gord:"~6g",ing:"Leite 250ml + banana + aveia 40g + mel",nota:"Bates tudo. Rápido para dias com pressa. Adiciona cacau em pó se quiseres sabor a chocolate."},
+  {nome:"Pão integral + abacate + 2 ovos",kcal:"~450 kcal",prot:"~20g",hidr:"~30g",gord:"~22g",ing:"2 fatias pão integral + 1/2 abacate + 2 ovos cozidos ou estrelados",nota:"Versão melhorada do pequeno-almoço dela. Os ovos adicionam a proteína que falta ao abacate sozinho."},
+  {nome:"Skyr natural + frutos vermelhos + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~30g",gord:"~2g",ing:"Skyr 150g + frutos vermelhos + mel + granola 20g (opcional)",nota:"O skyr tem mais proteína que qualquer iogurte. Ótimo para dias que não tens muita fome de manhã."},
+  {nome:"Wrap integral com ovos mexidos e espinafres",kcal:"~360 kcal",prot:"~20g",hidr:"~35g",gord:"~12g",ing:"1 wrap integral + 2 ovos mexidos + espinafres + queijo fresco",nota:"Fazes os ovos com espinafres numa frigideira e enrolas no wrap. 10 minutos no total."},
+  {nome:"Overnight oats com frutos vermelhos",kcal:"~300 kcal",prot:"~14g",hidr:"~42g",gord:"~6g",ing:"Aveia 50g + iogurte grego 100g + leite + frutos vermelhos + mel",nota:"Preparas na noite anterior. De manhã já está pronto, só adicionas os frutos e mel por cima."},
+];
 const mMarmitas = [
   {title:"Frango com arroz e legumes",prep:"Rende 4–5 marmitas",cor:"#E05A5A",kcal:"~430 kcal",prot:"~35g",hidr:"~45g",gord:"~8g",time:"45 min",passos:["Tempera 600g de peito de frango com alho, limão, paprika e azeite.","Assa no forno a 200°C por 25 min ou grelha.","Cozinha 300g de arroz basmati (fica mais solto).","Salteias brócolos, courgette ou feijão verde com alho.","Divide em doses: ~150g frango, 80g arroz cozido, legumes à vontade."]},
   {title:"Salmão com batata-doce e espinafres",prep:"Rende 3–4 marmitas",cor:"#E8A020",kcal:"~480 kcal",prot:"~38g",hidr:"~40g",gord:"~18g",time:"40 min",passos:["Assa 500g de salmão com limão e ervas a 180°C por 20 min.","Assa 400g de batata-doce em cubos a 200°C por 25 min.","Salteia espinafres frescos com alho — murcham em 2 min.","Divide: 1 posta salmão, 100g batata-doce, espinafres."]},
@@ -512,7 +525,19 @@ const mMarmitas = [
   {title:"Frango desfiado com lentilhas e cenoura",prep:"Rende 4–5 marmitas",cor:"#E05A5A",kcal:"~400 kcal",prot:"~36g",hidr:"~40g",gord:"~6g",time:"35 min",passos:["Cozinha 400g de peito de frango em água com sal e louro. Desfia.","Cozinha 200g de lentilhas verdes em água 25 min.","Salteia cenoura cortada em cubos com cebola e alho.","Mistura frango, lentilhas e cenoura. Tempera com cominho e paprika."]},
   {title:"Omelete de claras com legumes e arroz integral",prep:"Rende 3 marmitas",cor:"#E8A020",kcal:"~350 kcal",prot:"~28g",hidr:"~38g",gord:"~4g",time:"20 min",passos:["Cozinha 200g de arroz integral.","Bate 8 claras de ovo com sal e pimenta.","Salteia espinafres, cogumelos e pimento numa frigideira.","Deita as claras por cima e faz tipo omelete grande. Divide com o arroz."]},
 ];
-const mLanchesManha = [
+const mPequenoAlmocos = [
+  {nome:"Pão integral + abacate + 2 ovos",kcal:"~450 kcal",prot:"~20g",hidr:"~30g",gord:"~22g",ing:"2 fatias pão integral + ½ abacate + 2 ovos estrelados ou cozidos",nota:"Versão melhorada do pequeno-almoço dela. Os ovos adicionam a proteína que falta ao abacate sozinho."},
+  {nome:"Aveia com leite + banana + mel",kcal:"~320 kcal",prot:"~12g",hidr:"~52g",gord:"~6g",ing:"Aveia 50g + leite 200ml + banana + mel + canela",nota:"Adiciona canela por cima — fica melhor e ajuda a regular o açúcar no sangue."},
+  {nome:"Ovos mexidos + tosta integral + fruta",kcal:"~380 kcal",prot:"~24g",hidr:"~32g",gord:"~16g",ing:"2 ovos mexidos + 2 tostas integrais + 1 peça de fruta",nota:"Proteína de manhã reduz snacking ao longo do dia. Rápido de fazer."},
+  {nome:"Iogurte grego + granola + frutos vermelhos",kcal:"~300 kcal",prot:"~18g",hidr:"~35g",gord:"~6g",ing:"Iogurte grego 150g + granola 30g + frutos vermelhos + mel",nota:"Rápido de preparar. A granola dá textura crocante — usa pouca quantidade para não exagerar nas calorias."},
+  {nome:"Pão integral + ovo cozido + queijo fresco",kcal:"~340 kcal",prot:"~20g",hidr:"~32g",gord:"~12g",ing:"2 fatias pão integral + 1 ovo cozido + queijo fresco + tomate",nota:"Simples e proteico. Boa opção para os dias da semana quando não há muito tempo."},
+  {nome:"Panquecas de aveia com banana",kcal:"~350 kcal",prot:"~16g",hidr:"~45g",gord:"~8g",ing:"Aveia 50g + 1 ovo + banana + leite + canela",nota:"Bates tudo e fazes na frigideira. Bom para fins de semana quando tens mais tempo para cozinhar."},
+  {nome:"Batido de leite + banana + aveia",kcal:"~320 kcal",prot:"~12g",hidr:"~50g",gord:"~6g",ing:"Leite 250ml + banana + aveia 40g + mel",nota:"Bates tudo no liquidificador. Para dias com pressa. Adiciona cacau em pó se quiseres."},
+  {nome:"Skyr natural + frutos vermelhos + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~30g",gord:"~2g",ing:"Skyr 150g + frutos vermelhos + mel + granola 20g opcional",nota:"O skyr tem mais proteína que qualquer iogurte. Ótimo para dias que não tens muita fome de manhã."},
+  {nome:"Wrap integral com ovos mexidos e espinafres",kcal:"~360 kcal",prot:"~20g",hidr:"~35g",gord:"~12g",ing:"1 wrap integral + 2 ovos mexidos + espinafres + queijo fresco",nota:"Fazes os ovos com espinafres numa frigideira e enrolas no wrap. 10 minutos e está pronto."},
+  {nome:"Overnight oats com frutos vermelhos",kcal:"~300 kcal",prot:"~14g",hidr:"~42g",gord:"~6g",ing:"Aveia 50g + iogurte grego 100g + leite + frutos vermelhos + mel",nota:"Preparas na noite anterior. De manhã já está pronto — só adicionas os frutos vermelhos e mel por cima."},
+];
+
   {nome:"Iogurte grego natural + fruta",kcal:"~180 kcal",prot:"~12g",hidr:"~20g",nota:"Adiciona canela — atenua o desejo de doce"},
   {nome:"Ovo cozido + tosta integral",kcal:"~200 kcal",prot:"~14g",hidr:"~18g",nota:"Proteína de manhã reduz snacking à tarde"},
   {nome:"Aveia com leite + banana",kcal:"~280 kcal",prot:"~12g",hidr:"~45g",nota:"Bom nos dias de treino de manhã"},
@@ -565,7 +590,11 @@ const mDoces = [
 let mActiveDay = null;
 let mOpenTreino = null;
 let mOpenMarmita = null;
-let mCurrentRefeicao = 'marmitas';
+let mCurrentRefeicao = 'pAlmoco';
+
+function mPequenoAlmocoCard(item) {
+  return `<div class="m-card"><div class="m-item">${item.nome}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><p style="font-size:13px;color:#999;margin:10px 0 6px;line-height:1.5"><strong style="color:#666">Ingredientes:</strong> ${item.ing}</p><div class="m-item-note">${item.nota}</div></div>`;
+}
 
 function switchTabM(id, btn) {
   document.querySelectorAll('.m-section').forEach(s=>s.classList.remove('active'));
@@ -624,6 +653,10 @@ function switchRefeicaoM(tab, btn) {
   renderMRefeicoes();
 }
 
+function mPequenoAlmocoCard(item) {
+  return `<div class="m-card"><div class="m-item">${item.nome}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><p style="font-size:13px;color:#999;margin:10px 0 6px;line-height:1.5"><strong style="color:#666">Ingredientes:</strong> ${item.ing}</p><div class="m-item-note">${item.nota}</div></div>`;
+}
+
 function mSimpleCard(item, kcalColor) {
   const macros = `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
     <span style="font-size:11px;color:${kcalColor};background:${kcalColor}22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span>
@@ -637,9 +670,13 @@ function mJantarCard(item) {
   return `<div class="m-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div class="m-item" style="flex:1">${item.nome}</div><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace;white-space:nowrap">⏱ ${item.time}</span></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><div class="m-item-note" style="margin-top:8px">${item.nota}</div></div>`;
 }
 
+let mCurrentRefeicao = 'pAlmoco';
+
 function renderMRefeicoes() {
   const el = document.getElementById('m-ref-content');
-  if (mCurrentRefeicao === 'marmitas') {
+  if (mCurrentRefeicao === 'pAlmoco') {
+    el.innerHTML = `<div class="m-section-note">O pequeno-almoço dela de segunda a sexta é pão com abacate + meia de leite — é razoável mas tem pouca proteína (~10g). O ideal é adicionar 1-2 ovos ou queijo fresco ao lado para chegar a 18-20g. Abaixo tens 10 opções completas para variar.</div>${mPequenoAlmocos.map(mPequenoAlmocoCard).join('')}`;
+  } else if (mCurrentRefeicao === 'marmitas') {
     el.innerHTML = `<div class="m-section-note">Preparas ao domingo. Cada ideia rende 3–5 doses. Guarda no frio até 4 dias.</div>`+mMarmitas.map((m,i)=>`
       <div class="m-accordion-wrap">
         <button class="m-accordion-btn" style="border-color:${mOpenMarmita===i?m.cor:'#2a2a2a'};border-radius:${mOpenMarmita===i?'14px 14px 0 0':'14px'}" onclick="toggleMarmitaM(${i})">
