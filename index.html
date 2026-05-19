@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>As Nossas Rotinas</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0f0f0f; color: #e5e5e5; min-height: 100vh; }
+
+/* LANDING */
+#home { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.home-inner { max-width: 460px; width: 100%; }
+.routine-card { background: #1a1a1a; border-radius: 12px; padding: 24px; cursor: pointer; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; transition: transform 0.15s; }
+.routine-card:hover { transform: translateY(-2px); }
+.routine-card-label { font-size: 11px; letter-spacing: 2px; font-family: monospace; margin-bottom: 6px; }
+.routine-card-title { font-size: 20px; color: #fff; font-weight: bold; margin-bottom: 4px; }
+.routine-card-sub { font-size: 12px; color: #666; }
+.routine-card-arrow { font-size: 22px; }
+
+/* BACK BAR */
+.back-bar { padding: 12px 20px; background: #111; border-bottom: 1px solid #1a1a1a; }
+.back-btn { background: none; border: none; color: #666; font-size: 13px; cursor: pointer; font-family: Arial, sans-serif; padding: 4px 0; }
+.back-btn:hover { color: #aaa; }
+
+/* ─── ROTINA F ─── */
+#page-f { display: none; font-family: Arial, sans-serif; }
+.f-header { background: #111; border-bottom: 1px solid #222; padding: 24px 20px 0; }
+.f-header-inner { max-width: 640px; margin: 0 auto; }
+.f-label { font-size: 11px; letter-spacing: 3px; color: #555; margin-bottom: 4px; font-family: monospace; }
+.f-title { font-size: 26px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+.f-sub { font-size: 13px; color: #777; margin-bottom: 20px; }
+.f-tabs { display: flex; border-bottom: 1px solid #222; overflow-x: auto; }
+.f-tab { background: none; border: none; padding: 10px 16px; font-size: 13px; cursor: pointer; color: #555; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: Arial, sans-serif; }
+.f-tab.active { color: #fff; border-bottom-color: #4ade80; }
+.f-content { max-width: 640px; margin: 0 auto; padding: 20px; }
+.f-section { display: none; }
+.f-section.active { display: block; }
+.f-card { background: #1a1a1a; border: 1px solid #222; border-radius: 8px; padding: 16px; margin-bottom: 10px; }
+.f-card-list { display: flex; flex-direction: column; gap: 12px; }
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-family: monospace; white-space: nowrap; }
+.tag-g { color: #4ade80; background: #4ade8022; }
+.tag-o { color: #f97316; background: #f9731622; }
+.tag-b { color: #60a5fa; background: #60a5fa22; }
+.macro-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.day-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; }
+.day-cell { background: #1a1a1a; border-radius: 8px; padding: 10px 4px; text-align: center; border: 1px solid #2a2a2a; }
+.metas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.f-sub-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.f-sub-tab { flex: 1; min-width: 80px; background: #1a1a1a; border: 1px solid #222; border-radius: 8px; padding: 10px 8px; font-size: 12px; color: #e5e5e5; cursor: pointer; font-family: Arial, sans-serif; }
+.f-sub-tab.active-o { background: #f97316; color: #000; font-weight: bold; }
+.f-ref-tabs { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+.f-ref-tab { flex-shrink: 0; background: #1a1a1a; border: 1px solid #222; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #e5e5e5; cursor: pointer; font-family: Arial, sans-serif; white-space: nowrap; }
+.f-ref-tab.active { background: #4ade80; color: #000; font-weight: bold; }
+.f-green-box { background: #1a2a1a; border: 1px solid #4ade8033; border-radius: 8px; padding: 14px; margin-top: 16px; font-size: 13px; color: #4ade80; line-height: 1.6; }
+.f-note-box { background: #1a2a1a; border: 1px solid #4ade8033; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #4ade80; margin-bottom: 16px; }
+.f-food-name { font-size: 14px; color: #fff; font-weight: bold; margin-bottom: 4px; }
+.f-food-ing { font-size: 13px; color: #999; line-height: 1.5; margin: 10px 0 6px; }
+.f-food-ing strong { color: #666; }
+.f-food-tip { font-size: 12px; color: #555; line-height: 1.5; font-style: italic; }
+
+/* ─── ROTINA M ─── */
+#page-m { display: none; font-family: Georgia, serif; }
+.m-header { padding: 32px 24px 0; background: #111; }
+.m-header-inner { max-width: 480px; margin: 0 auto; }
+.m-label { font-size: 11px; letter-spacing: 3px; color: #666; margin-bottom: 10px; font-family: monospace; }
+.m-title { font-size: 34px; font-weight: 800; line-height: 1.15; margin: 0 0 10px; color: #fff; }
+.m-sub { color: #666; font-size: 13px; margin: 0 0 20px; font-family: monospace; }
+.m-imc-bar { background: #1a1a1a; border-radius: 12px; padding: 12px 16px; margin-bottom: 24px; display: flex; }
+.m-imc-cell { flex: 1; text-align: center; }
+.m-imc-cell:not(:last-child) { border-right: 1px solid #2a2a2a; }
+.m-imc-label { font-size: 10px; color: #555; margin-bottom: 2px; font-family: monospace; }
+.m-imc-val { font-size: 17px; font-weight: 700; }
+.m-imc-note { font-size: 10px; color: #444; }
+.m-tabs { display: flex; border-bottom: 1px solid #222; overflow-x: auto; }
+.m-tab { background: none; border: none; color: #555; font-size: 13px; padding: 8px 14px; cursor: pointer; border-bottom: 2px solid transparent; font-family: monospace; white-space: nowrap; margin-bottom: -1px; }
+.m-tab.active { color: #fff; border-bottom-color: #E05A5A; }
+.m-content { max-width: 480px; margin: 0 auto; padding: 20px 24px; }
+.m-section { display: none; }
+.m-section.active { display: block; }
+.m-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
+.m-day-row { display: flex; gap: 6px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+#page-m { font-family: Arial, sans-serif; }
+.m-day-btn { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 10px 6px; cursor: pointer; min-width: 44px; text-align: center; font-family: Arial, sans-serif; }
+.m-day-name { font-size: 9px; color: #555; margin-bottom: 5px; font-family: monospace; }
+.m-day-dot { width: 7px; height: 7px; border-radius: 50%; margin: 0 auto 5px; }
+.m-day-label { font-size: 9px; line-height: 1.3; white-space: pre-line; }
+.m-day-emoji { font-size: 13px; margin-top: 3px; }
+.m-legend { background: #1a1a1a; border-radius: 0 12px 12px 0; padding: 14px 18px; margin-bottom: 10px; }
+.m-legend-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.m-legend-text { color: #888; font-size: 13px; line-height: 1.6; }
+.m-accordion-btn { width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px 18px; cursor: pointer; text-align: left; font-family: Arial, sans-serif; margin-bottom: 0; }
+.m-accordion-body { background: #161616; border-radius: 0 0 14px 14px; padding: 14px 18px; }
+.m-accordion-wrap { margin-bottom: 12px; }
+.m-note { background: #1a1a1a; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: #666; line-height: 1.6; font-family: monospace; }
+.m-goals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.m-goal-key { font-size: 12px; color: #555; margin-bottom: 2px; }
+.m-goal-val { font-size: 17px; font-weight: 700; color: #fff; }
+.m-ref-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.m-ref-tab { background: #1a1a1a; border: none; border-radius: 20px; padding: 6px 16px; color: #666; font-size: 12px; cursor: pointer; font-family: monospace; }
+.m-ref-tab.active { background: #E05A5A; color: #fff; }
+.m-item { font-size: 13px; color: #fff; font-weight: 600; flex: 1; }
+.m-item-note { font-size: 12px; color: #555; margin-top: 5px; line-height: 1.5; }
+.m-section-note { color: #555; font-size: 12px; margin-bottom: 16px; line-height: 1.6; font-family: monospace; }
+.m-group-label { color: #666; font-size: 11px; font-family: monospace; letter-spacing: 2px; margin-bottom: 12px; }
+.m-principle-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 7px; }
+.m-principle-dash { color: inherit; margin-top: 2px; flex-shrink: 0; font-size: 12px; }
+.m-principle-text { color: #aaa; font-size: 13px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ LANDING -->
+<div id="home">
+  <div class="home-inner">
+    <p style="font-size:11px;letter-spacing:3px;color:#555;text-align:center;margin-bottom:8px;font-family:monospace">AS NOSSAS ROTINAS</p>
+    <h1 style="font-size:28px;color:#fff;text-align:center;margin-bottom:6px;">Escolhe a tua rotina</h1>
+    <p style="font-size:13px;color:#555;text-align:center;margin-bottom:40px;font-family:monospace">Clica para abrir</p>
+
+    <div class="routine-card" style="border:1px solid #4ade8044" onclick="openRotina('f')">
+      <div>
+        <div class="routine-card-label" style="color:#4ade80">ROTINA F 💪🏼</div>
+        <div class="routine-card-title">Ganho de Força e Massa</div>
+        <div class="routine-card-sub">19 anos · 1,87m · 66kg → objetivo ~85kg</div>
+      </div>
+      <div class="routine-card-arrow" style="color:#4ade80">→</div>
+    </div>
+
+    <div class="routine-card" style="border:1px solid #E05A5A44" onclick="openRotina('m')">
+      <div>
+        <div class="routine-card-label" style="color:#E05A5A">ROTINA M 💪🏼</div>
+        <div class="routine-card-title">Perda de Peso</div>
+        <div class="routine-card-sub">20 anos · 1,59m · 63kg → objetivo ~54kg</div>
+      </div>
+      <div class="routine-card-arrow" style="color:#E05A5A">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ ROTINA F -->
+<div id="page-f" style="display:none">
+  <div class="back-bar"><button class="back-btn" onclick="goHome()">← Voltar</button></div>
+  <div class="f-header">
+    <div class="f-header-inner">
+      <div class="f-label">ROTINA F 💪🏼</div>
+      <div class="f-title">Ganho de Força e Massa</div>
+      <div class="f-sub">19 anos · 1,87m · 66kg → objetivo ~85kg</div>
+      <div class="f-tabs">
+        <button class="f-tab active" onclick="switchTabF('f-semana',this)">Semana</button>
+        <button class="f-tab" onclick="switchTabF('f-treino',this)">Treino</button>
+        <button class="f-tab" onclick="switchTabF('f-alimentacao',this)">Alimentação</button>
+        <button class="f-tab" onclick="switchTabF('f-refeicoes',this)">Refeições</button>
+      </div>
+    </div>
+  </div>
+  <div class="f-content">
+    <div id="f-semana" class="f-section active">
+      <div class="day-grid">
+        <div class="day-cell" style="border-color:#4ade8033"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">SEG</div><div style="width:8px;height:8px;border-radius:50%;background:#4ade80;margin:0 auto 6px"></div><div style="font-size:9px;color:#4ade80;line-height:1.3">Full Body 💪</div></div>
+        <div class="day-cell" style="border-color:#f9731633"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">TER</div><div style="width:8px;height:8px;border-radius:50%;background:#f97316;margin:0 auto 6px"></div><div style="font-size:9px;color:#f97316;line-height:1.3">Krav Maga 🥋</div></div>
+        <div class="day-cell" style="border-color:#f9731633"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">QUA</div><div style="width:8px;height:8px;border-radius:50%;background:#f97316;margin:0 auto 6px"></div><div style="font-size:9px;color:#f97316;line-height:1.3">Krav Maga 🥋</div></div>
+        <div class="day-cell" style="border-color:#6b728033"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">QUI</div><div style="width:8px;height:8px;border-radius:50%;background:#6b7280;margin:0 auto 6px"></div><div style="font-size:9px;color:#6b7280;line-height:1.3">Descanso</div></div>
+        <div class="day-cell" style="border-color:#6b728033"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">SEX</div><div style="width:8px;height:8px;border-radius:50%;background:#6b7280;margin:0 auto 6px"></div><div style="font-size:9px;color:#6b7280;line-height:1.3">Descanso</div></div>
+        <div class="day-cell" style="border-color:#f9731633"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">SAB</div><div style="width:8px;height:8px;border-radius:50%;background:#f97316;margin:0 auto 6px"></div><div style="font-size:9px;color:#f97316;line-height:1.3">Krav Maga 🥋</div></div>
+        <div class="day-cell" style="border-color:#6b728033"><div style="font-size:10px;font-family:monospace;color:#555;margin-bottom:6px">DOM</div><div style="width:8px;height:8px;border-radius:50%;background:#6b7280;margin:0 auto 6px"></div><div style="font-size:9px;color:#6b7280;line-height:1.3">Descanso</div></div>
+      </div>
+      <div style="border-left:3px solid #4ade80;background:#1a1a1a;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px"><div style="font-size:13px;font-weight:bold;color:#4ade80;margin-bottom:4px">Full Body</div><div style="font-size:13px;color:#999;line-height:1.5">Segunda-feira. Halteres + calistenia, ~55 min. 1 sessão semanal — quando recuperares bem podes adicionar uma segunda na sexta.</div></div>
+      <div style="border-left:3px solid #f97316;background:#1a1a1a;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px"><div style="font-size:13px;font-weight:bold;color:#f97316;margin-bottom:4px">Krav Maga</div><div style="font-size:13px;color:#999;line-height:1.5">Terça e Quarta às 19h, Sábado às 11h. 1h cada sessão, às vezes 2h. Já é carga física real.</div></div>
+      <div style="border-left:3px solid #6b7280;background:#1a1a1a;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px"><div style="font-size:13px;font-weight:bold;color:#6b7280;margin-bottom:4px">Descanso</div><div style="font-size:13px;color:#999;line-height:1.5">Quinta, Sexta e Domingo. O músculo cresce quando descansas, não quando treinas.</div></div>
+      <div class="f-card" style="margin-top:6px">
+        <div style="font-size:11px;color:#f97316;margin-bottom:12px;letter-spacing:2px;font-family:monospace">METAS DIÁRIAS</div>
+        <div class="metas-grid">
+          <div><div style="font-size:12px;color:#555">🔥 Calorias</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">3.000–3.500 kcal</div></div>
+          <div><div style="font-size:12px;color:#555">🥩 Proteína</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">150–190g</div></div>
+          <div><div style="font-size:12px;color:#555">🍚 Hidratos</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">350–450g</div></div>
+          <div><div style="font-size:12px;color:#555">💧 Água</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">3–4L</div></div>
+          <div><div style="font-size:12px;color:#555">💊 Creatina</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">5g/dia</div></div>
+          <div><div style="font-size:12px;color:#555">💤 Sono</div><div style="font-size:14px;color:#e5e5e5;font-weight:bold">7–8h</div></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:16px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#777"><div style="width:10px;height:10px;border-radius:50%;background:#4ade80"></div>Proteína</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#777"><div style="width:10px;height:10px;border-radius:50%;background:#60a5fa"></div>Hidratos</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#777"><div style="width:10px;height:10px;border-radius:50%;background:#f97316"></div>Calorias</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="f-treino" class="f-section">
+      <h2 style="font-size:18px;color:#fff;margin-bottom:4px">Treino Full Body</h2>
+      <p style="font-size:12px;color:#777;margin-bottom:12px;font-family:monospace">Segunda-feira · ~55 min · Descanso 60-90 seg entre séries</p>
+      <div class="f-note-box">💡 Podes fazer tudo em casa — no chão, numa cadeira ou na cama. Treina descalço ou em meias para mais estabilidade.</div>
+      <div id="f-exercises" class="f-card-list"></div>
+      <div class="f-card" style="margin-top:12px;font-size:13px;color:#777;line-height:1.6"><strong style="color:#aaa">Progressão:</strong> quando consegues completar todas as séries com boa forma, aumenta o peso. Se não tens mais peso, aumenta as repetições para 15-20 ou adiciona pausa de 2 seg no fundo do movimento.</div>
+    </div>
+
+    <div id="f-alimentacao" class="f-section">
+      <div class="f-sub-tabs" id="f-meal-tabs"></div>
+      <div id="f-meal-content"></div>
+    </div>
+
+    <div id="f-refeicoes" class="f-section">
+      <div class="f-ref-tabs" id="f-ref-tabs"></div>
+      <div id="f-ref-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ ROTINA M -->
+<div id="page-m" style="display:none">
+  <div class="back-bar"><button class="back-btn" onclick="goHome()">← Voltar</button></div>
+  <div class="m-header">
+    <div class="m-header-inner">
+      <div class="m-label">ROTINA M 💪🏼</div>
+      <h1 class="m-title">Perda de<br>Peso</h1>
+      <p class="m-sub">1,59m · 63kg → objetivo ~54kg · 4 treinos/sem</p>
+      <div class="m-imc-bar">
+        <div class="m-imc-cell"><div class="m-imc-label">ATUAL</div><div class="m-imc-val" style="color:#E8A020">24,9</div><div class="m-imc-note">IMC</div></div>
+        <div class="m-imc-cell"><div class="m-imc-label">OBJETIVO</div><div class="m-imc-val" style="color:#4ADE80">21,3</div><div class="m-imc-note">IMC</div></div>
+        <div class="m-imc-cell"><div class="m-imc-label">A PERDER</div><div class="m-imc-val" style="color:#C084FC">9 kg</div><div class="m-imc-note">~4–5 meses</div></div>
+      </div>
+      <div class="m-tabs">
+        <button class="m-tab active" onclick="switchTabM('m-semana',this)">Semana</button>
+        <button class="m-tab" onclick="switchTabM('m-treinos',this)">Treinos</button>
+        <button class="m-tab" onclick="switchTabM('m-alimentacao',this)">Alimentação</button>
+        <button class="m-tab" onclick="switchTabM('m-refeicoes',this)">Refeições</button>
+      </div>
+    </div>
+  </div>
+  <div class="m-content">
+    <div id="m-semana" class="m-section active">
+      <div class="m-day-row" id="m-day-row"></div>
+      <div id="m-day-info"></div>
+      <div class="m-legend" style="border-left:3px solid #E05A5A"><div class="m-legend-title" style="color:#E05A5A">Treinos sem ginásio</div><div class="m-legend-text">SEG, TER e QUI são 100% em casa ou exterior. Sem equipamento. As flexões, agachamentos e glute bridges com peso corporal feitos com consistência superam qualquer máquina de ginásio.</div></div>
+      <div class="m-legend" style="border-left:3px solid #C084FC"><div class="m-legend-title" style="color:#C084FC">Sábado com pesos</div><div class="m-legend-text">O dia mais completo da semana. Com acesso a halteres ou barras, trabalhas cargas maiores em movimentos que em casa não consegues replicar igual. Não percas este treino.</div></div>
+      <div class="m-legend" style="border-left:3px solid #4ADE80"><div class="m-legend-title" style="color:#4ADE80">Domingo: Meal Prep</div><div class="m-legend-text">Preparar as marmitas ao domingo é metade da batalha. Quando tens comida boa no frigorífico, não improvisas mal. Ver tab 'Refeições' para ideias.</div></div>
+      <div class="m-legend" style="border-left:3px solid #444"><div class="m-legend-title" style="color:#888">Descanso</div><div class="m-legend-text">Quarta, Sexta e Domingo (além do prep). Caminhadas leves contam e ajudam a gastar calorias sem stress articular. Não te cobres por não treinar nestes dias.</div></div>
+    </div>
+
+    <div id="m-treinos" class="m-section">
+      <div class="m-note">💡 Descanso 60–90s entre séries de força. 30–45s em circuitos. Aumenta reps ou dificuldade gradualmente cada semana.</div>
+      <div id="m-treinos-list"></div>
+    </div>
+
+    <div id="m-alimentacao" class="m-section">
+      <div class="f-card" style="margin-bottom:20px">
+        <div style="font-size:10px;letter-spacing:2px;color:#E05A5A;margin-bottom:14px;font-family:monospace">METAS DIÁRIAS</div>
+        <div class="m-goals-grid">
+          <div><div class="m-goal-key">🔥 Calorias</div><div class="m-goal-val">1.400–1.600 kcal</div></div>
+          <div><div class="m-goal-key">🥩 Proteína</div><div class="m-goal-val">95–110g</div></div>
+          <div><div class="m-goal-key">🌾 Hidratos</div><div class="m-goal-val">130–160g</div></div>
+          <div><div class="m-goal-key">🥑 Gordura</div><div class="m-goal-val">40–55g</div></div>
+          <div><div class="m-goal-key">💧 Água</div><div class="m-goal-val">2–2,5L</div></div>
+          <div><div class="m-goal-key">😴 Sono</div><div class="m-goal-val">7–8h</div></div>
+        </div>
+      </div>
+      <div style="background:#1a1a1a;border-left:3px solid #C084FC;border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:12px">
+        <div style="color:#C084FC;font-weight:700;font-size:15px;margin-bottom:8px">O docinho ao fim do almoço 🍫</div>
+        <div style="color:#aaa;font-size:13px;line-height:1.7">Não precisas de cortar. Precisas de trocar. Ao fim de semana que é quando acontece mais — tem algo preparado que satisfaz sem rebentar a janela calórica. 2 quadrados de chocolate negro (70%+), 2–3 tâmaras, ou um iogurte grego com mel. O contexto do doce fica, as calorias a mais não.</div>
+      </div>
+      <div class="m-legend" style="border-left:3px solid #E05A5A;margin-bottom:10px">
+        <div class="m-legend-title" style="color:#E05A5A">Princípios que funcionam para ti</div>
+        <div style="margin-top:8px">
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#E05A5A">—</div><div class="m-principle-text">Não bebes álcool nem sumos — já tens aqui uma vantagem enorme. Muita gente perde 200–400 kcal só cortando bebidas.</div></div>
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#E05A5A">—</div><div class="m-principle-text">Proteína em cada refeição: ovos, frango, atum, iogurte grego, queijo fresco.</div></div>
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#E05A5A">—</div><div class="m-principle-text">Hidratos complexos antes do treino (arroz, aveia, batata-doce). Nos dias de descanso podes reduzir ligeiramente.</div></div>
+          <div class="m-principle-item" style="margin-bottom:0"><div class="m-principle-dash" style="color:#E05A5A">—</div><div class="m-principle-text">Gorduras boas nas outras refeições: azeite, ovos, peixe gordo.</div></div>
+        </div>
+      </div>
+      <div class="m-legend" style="border-left:3px solid #E8A020;margin-bottom:10px">
+        <div class="m-legend-title" style="color:#E8A020">Dias de treino vs descanso</div>
+        <div style="margin-top:8px">
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#E8A020">—</div><div class="m-principle-text">Dia de treino: parte superior da janela (~1.550–1.600 kcal). Mais hidratos.</div></div>
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#E8A020">—</div><div class="m-principle-text">Dia de descanso: parte inferior (~1.400–1.450 kcal). Prato com mais proteína e legumes, menos hidratos.</div></div>
+          <div class="m-principle-item" style="margin-bottom:0"><div class="m-principle-dash" style="color:#E8A020">—</div><div class="m-principle-text">Não precisas de contar tudo. Controla a proteína e os hidratos — a gordura cai naturalmente no sítio.</div></div>
+        </div>
+      </div>
+      <div class="m-legend" style="border-left:3px solid #4ADE80">
+        <div class="m-legend-title" style="color:#4ADE80">Fim de semana</div>
+        <div style="margin-top:8px">
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#4ADE80">—</div><div class="m-principle-text">É quando aparece o doce — planeia uma alternativa saborosa com antecedência.</div></div>
+          <div class="m-principle-item"><div class="m-principle-dash" style="color:#4ADE80">—</div><div class="m-principle-text">Não compensas o excesso de sábado comendo menos ao domingo. Come normal.</div></div>
+          <div class="m-principle-item" style="margin-bottom:0"><div class="m-principle-dash" style="color:#4ADE80">—</div><div class="m-principle-text">Domingo é meal prep: 1h30 na cozinha poupa 5 dias de decisões difíceis.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="m-refeicoes" class="m-section">
+      <div class="m-ref-tabs">
+        <button class="m-ref-tab active" onclick="switchRefeicaoM('pAlmoco',this)">P. Almoço</button>
+        <button class="m-ref-tab" onclick="switchRefeicaoM('marmitas',this)">Marmitas</button>
+        <button class="m-ref-tab" onclick="switchRefeicaoM('lanches',this)">Lanches</button>
+        <button class="m-ref-tab" onclick="switchRefeicaoM('jantares',this)">Jantares</button>
+        <button class="m-ref-tab" onclick="switchRefeicaoM('doces',this)">Doces</button>
+      </div>
+      <div id="m-ref-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════ NAVIGATION
+function openRotina(id) {
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('page-f').style.display = id === 'f' ? 'block' : 'none';
+  document.getElementById('page-m').style.display = id === 'm' ? 'block' : 'none';
+  window.scrollTo(0,0);
+}
+function goHome() {
+  document.getElementById('home').style.display = 'flex';
+  document.getElementById('page-f').style.display = 'none';
+  document.getElementById('page-m').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════ ROTINA F DATA
+const fExercises = [
+  { name: "Remada curvada com halteres", sets: "4x10-12", note: "Costas retas, puxas até à anca. 1 braço de cada vez. Podes apoiar joelho e mão na cama." },
+  { name: "Floor Press com halteres", sets: "4x10-12", note: "Deitas no chão e prensas para cima. Substitui o banco." },
+  { name: "Romanian Deadlift", sets: "3x12", note: "Um halter em cada mão. Costas retas, desceres sentindo os isquiotibiais. Joelhos pouco dobrados." },
+  { name: "Press de ombros sentado", sets: "3x10-12", note: "Cadeira normal ou cama. Halteres ao nível das orelhas, prensas para cima." },
+  { name: "Split Squat Búlgaro", sets: "3x10 cada perna", note: "Começa sem peso. Pé de trás numa cadeira. Quando dominares a forma, adicionas halteres." },
+  { name: "Curl bícep + Extensão trícep", sets: "3x12 cada", note: "Superset: rosca direta seguida de extensão overhead sem descanso. Descansas só depois dos dois." },
+  { name: "Prancha", sets: "3x45 seg", note: "Core ativo, ancas não caem. Termina sempre com isto." },
+];
+
+const fMealPlans = {
+  weekday: { label:"Seg/Qui/Sex", title:"Dias sem Krav", sub:"Segunda, Quinta, Sexta", total:"~2.900 kcal · ~180g prot · ~370g hidr",
+    meals:[
+      {e:"🌅",time:"Pequeno-almoço",kcal:"~800 kcal",food:"Ver Refeições → P. Almoço",tip:"A refeição mais importante — não saltes nem simplifiques demais."},
+      {e:"☀️",time:"Almoço",kcal:"~750 kcal",food:"Sobras do jantar anterior",tip:"Faz sempre o jantar a render para duas porções. É a chave da semana."},
+      {e:"🕓",time:"Lanche",kcal:"~300 kcal",food:"Ver Refeições → Lanches",tip:"Chegas a casa do trabalho e lanches."},
+      {e:"🌙",time:"Jantar",kcal:"~800 kcal",food:"Ver Refeições → Jantares",tip:"Faz sempre o dobro — metade é o almoço de amanhã."},
+      {e:"😴",time:"Antes de dormir",kcal:"~250 kcal",food:"Ver Refeições → Antes de Dormir",tip:"Proteína de absorção lenta. Ótimo para recuperação durante o sono."},
+    ]},
+  krav: { label:"Ter/Qua (19h)", title:"Dias de Krav (19h)", sub:"Terça e Quarta", total:"~2.850 kcal · ~175g prot · ~360g hidr",
+    meals:[
+      {e:"🌅",time:"Pequeno-almoço",kcal:"~800 kcal",food:"Ver Refeições → P. Almoço",tip:"Igual ao resto da semana."},
+      {e:"☀️",time:"Almoço",kcal:"~750 kcal",food:"Sobras do jantar anterior",tip:""},
+      {e:"⚡",time:"Lanche pré-treino (17h30)",kcal:"~450 kcal",food:"2 fatias pão integral + 1 lata atum + 1 banana",tip:"Come 1h a 1h30 antes do treino. Hidratos para energia, proteína para os músculos."},
+      {e:"🌙",time:"Jantar pós-treino (~21h)",kcal:"~600 kcal",food:"Massa 120g + 2 ovos + legumes + azeite",tip:"Mais leve porque já comeste bem antes. Faz na mesma o dobro para o almoço de amanhã."},
+      {e:"😴",time:"Antes de dormir",kcal:"~250 kcal",food:"Ver Refeições → Antes de Dormir",tip:""},
+    ]},
+  saturday: { label:"Sábado", title:"Sábado", sub:"Krav Maga às 11h", total:"~3.200 kcal · ~195g prot · ~410g hidr",
+    meals:[
+      {e:"🌅",time:"Pequeno-almoço (9h — pré-treino)",kcal:"~950 kcal",food:"Aveia 100g + leite + 3 ovos + banana + manteiga de amendoim por cima",tip:"Come 1h30 antes do treino. Aqueces a aveia com leite, tiras do micro-ondas e metes a manteiga de amendoim por cima."},
+      {e:"☀️",time:"Almoço",kcal:"~850 kcal",food:"Arroz 150g + frango 250g + legumes + azeite",tip:"Primeiro almoço sólido depois do treino. Não saltes."},
+      {e:"🕓",time:"Lanche",kcal:"~350 kcal",food:"Ver Refeições → Lanches",tip:""},
+      {e:"🌙",time:"Jantar",kcal:"~800 kcal",food:"Ver Refeições → Jantares",tip:"Tens mais tempo ao fim de semana — aproveita para cozinhar melhor."},
+      {e:"😴",time:"Antes de dormir",kcal:"~250 kcal",food:"Ver Refeições → Antes de Dormir",tip:""},
+    ]},
+  sunday: { label:"Domingo", title:"Domingo", sub:"Descanso", total:"~2.700 kcal · ~165g prot · ~340g hidr",
+    meals:[
+      {e:"🌅",time:"Pequeno-almoço",kcal:"~700 kcal",food:"Ver Refeições → P. Almoço",tip:"Mais soft que o sábado — versão mais leve de qualquer uma das opções."},
+      {e:"☀️",time:"Almoço",kcal:"~750 kcal",food:"Sobras do jantar de sábado ou refeição normal",tip:"Boa altura para preparar algo para a semana."},
+      {e:"🕓",time:"Lanche",kcal:"~300 kcal",food:"Ver Refeições → Lanches",tip:""},
+      {e:"🌙",time:"Jantar",kcal:"~700 kcal",food:"Ver Refeições → Jantares",tip:"Cozinha o dobro — o almoço de segunda fica pronto."},
+      {e:"😴",time:"Antes de dormir",kcal:"~250 kcal",food:"Ver Refeições → Antes de Dormir",tip:""},
+    ]},
+};
+const fMealKeys = ['weekday','krav','saturday','sunday'];
+
+const fBreakfasts = [
+  {name:"Aveia clássica + ovos",kcal:"~800 kcal",prot:"~45g",hidr:"~75g",gord:"~18g",ing:"Aveia 100g + leite 300ml + 3 ovos mexidos + banana",tip:"A opção principal. Aqueces aveia com leite no micro-ondas 2 min, ovos ao lado em 5 min. Adiciona mel ou canela a gosto."},
+  {name:"Panquecas de aveia",kcal:"~650 kcal",prot:"~35g",hidr:"~65g",gord:"~12g",ing:"Aveia 80g + 2 ovos + banana + leite + canela",tip:"Bates tudo, fazes na frigideira. Fica mais apetecível que a aveia normal. Bom para fins de semana."},
+  {name:"Batido denso",kcal:"~750 kcal",prot:"~30g",hidr:"~85g",gord:"~18g",ing:"Leite 400ml + aveia 80g + banana + manteiga de amendoim + mel",tip:"Bates tudo na liquidificadora. Para os dias que não tens tempo — bebes em andamento."},
+  {name:"Ovos + torrada + leite",kcal:"~650 kcal",prot:"~40g",hidr:"~40g",gord:"~20g",ing:"4 ovos mexidos + 2 torradas integrais + fruta + copo de leite",tip:"Mais leve que a aveia mas muito proteico. Boa alternativa quando te cansas da aveia."},
+  {name:"Overnight oats",kcal:"~600 kcal",prot:"~30g",hidr:"~70g",gord:"~8g",ing:"Aveia 80g + iogurte grego 150g + leite + banana + mel",tip:"Preparas na noite anterior num frasco. De manhã já está pronto — só adicionas fruta e mel."},
+  {name:"Tosta francesa proteica",kcal:"~600 kcal",prot:"~35g",hidr:"~45g",gord:"~12g",ing:"2 fatias pão integral + 2 ovos + leite 50ml + canela + mel",tip:"Bates os ovos com leite e canela, molhas o pão e fazes na frigideira. Fica tipo rabanada."},
+  {name:"Wrap de ovos mexidos",kcal:"~650 kcal",prot:"~38g",hidr:"~55g",gord:"~16g",ing:"2 wraps integrais + 3 ovos + queijo + tomate + azeite",tip:"Fazes os ovos mexidos, enrolas no wrap com queijo e tomate. Rápido e fácil de comer em andamento."},
+  {name:"Iogurte grego + aveia fria + fruta",kcal:"~550 kcal",prot:"~28g",hidr:"~65g",gord:"~6g",ing:"Iogurte grego 200g + aveia 60g + banana ou morangos + mel + canela",tip:"Mistura tudo numa tigela sem aquecer nada. Boa alternativa nos dias de calor."},
+  {name:"Pão integral + ovos + queijo + leite",kcal:"~650 kcal",prot:"~40g",hidr:"~35g",gord:"~18g",ing:"2 fatias pão integral + 3 ovos + queijo fatiado + copo de leite 250ml",tip:"O mais simples de todos. Sem aveia, sem complicações. Bom para quando não tens paciência para preparar mais nada."},
+  {name:"Fritada de ovos com legumes",kcal:"~700 kcal",prot:"~38g",hidr:"~45g",gord:"~22g",ing:"4 ovos + tomate + pimento + cebola + queijo + 1 fatia pão integral",tip:"Bates os ovos, juntas legumes picados e queijo numa frigideira. Boa variação para o fim de semana."},
+];
+const fLunches = [
+  {name:"Arroz + frango + legumes",time:"30 min",kcal:"~750 kcal",prot:"~55g",hidr:"~100g",gord:"~10g",ing:"150g arroz + 200g frango + legumes + azeite",tip:"O almoço clássico. Normalmente são as sobras do jantar."},
+  {name:"Massa com atum",time:"15 min",kcal:"~650 kcal",prot:"~45g",hidr:"~90g",gord:"~8g",ing:"130g massa + 1 lata atum + azeite + alho + tomate",tip:"Rápido de fazer. Se estiveres em casa sozinho é a opção mais fácil."},
+  {name:"Arroz de atum",time:"20 min",kcal:"~600 kcal",prot:"~40g",hidr:"~95g",gord:"~8g",ing:"130g arroz + 2 latas atum + azeite + cebola + tomate",tip:"Ainda mais rápido que a massa. Bom para dias com pressa."},
+  {name:"Batata-doce + ovos + legumes",time:"15 min",kcal:"~550 kcal",prot:"~30g",hidr:"~55g",gord:"~12g",ing:"300g batata-doce + 3 ovos + espinafres ou brócolos + azeite",tip:"Batata-doce ao micro-ondas em 8 min, ovos mexidos ao lado."},
+  {name:"Wrap de frango + queijo",time:"5 min",kcal:"~700 kcal",prot:"~50g",hidr:"~65g",gord:"~14g",ing:"2 wraps + 200g frango + queijo + alface + tomate",tip:"Usa frango que já tenhas cozinhado. Fácil de montar em 2 minutos."},
+  {name:"Sopa + pão + proteína",time:"10 min",kcal:"~600 kcal",prot:"~35g",hidr:"~60g",gord:"~6g",ing:"Sopa de legumes + 2 fatias pão integral + 150g frango ou atum",tip:"Opção mais leve. A sopa sacia bem. Complementa sempre com proteína ao lado."},
+  {name:"Bowl de arroz com atum",time:"5 min",kcal:"~620 kcal",prot:"~42g",hidr:"~90g",gord:"~8g",ing:"130g arroz + 2 latas atum + milho + tomate + azeite + limão",tip:"Mistura tudo numa tigela. Sem cozinhar nada de novo se tiveres arroz feito."},
+  {name:"Esparguete com ovos e queijo",time:"20 min",kcal:"~700 kcal",prot:"~40g",hidr:"~95g",gord:"~18g",ing:"130g esparguete + 3 ovos + queijo ralado + azeite + alho",tip:"Versão simples de carbonara. Mistura os ovos batidos fora do lume para não cozerem demais."},
+  {name:"Pão integral + frango + queijo",time:"5 min",kcal:"~600 kcal",prot:"~45g",hidr:"~45g",gord:"~12g",ing:"2 fatias pão integral + 180g frango + queijo + alface + tomate",tip:"Uma sandes grande e proteica. Usa frango que já tenhas cozinhado."},
+  {name:"Frango desfiado com batata-doce e ovo",time:"15 min",kcal:"~680 kcal",prot:"~50g",hidr:"~50g",gord:"~12g",ing:"200g frango desfiado + 200g batata-doce + 2 ovos + azeite",tip:"Batata-doce ao micro-ondas 8 min, frango das sobras, ovos mexidos ao lado."},
+];
+const fSnacks = [
+  {name:"Iogurte grego + fruta + nozes",kcal:"~300 kcal",prot:"~20g",hidr:"~25g",gord:"~10g",tip:"O lanche mais simples e completo. Cabe na mochila sem frigorífico por 2-3h."},
+  {name:"Pão integral + atum + azeite",kcal:"~350 kcal",prot:"~30g",hidr:"~30g",gord:"~8g",tip:"2 fatias de pão, 1 lata de atum, fio de azeite. Rápido e muito proteico."},
+  {name:"Banana + manteiga de amendoim",kcal:"~300 kcal",prot:"~8g",hidr:"~35g",gord:"~12g",tip:"Cortas a banana ao meio e barras a manteiga de amendoim. Hidratos rápidos e gordura boa."},
+  {name:"Ovos cozidos + fruta",kcal:"~250 kcal",prot:"~18g",hidr:"~20g",gord:"~8g",tip:"2-3 ovos cozidos que preparas de manhã. Duram o dia todo sem frigorífico se não descascares."},
+  {name:"Batido caseiro",kcal:"~450 kcal",prot:"~25g",hidr:"~55g",gord:"~16g",tip:"Leite 300ml + banana + manteiga de amendoim + cacau opcional. Para quando não tens tempo de comer."},
+  {name:"Bolachas de arroz + manteiga de amendoim",kcal:"~250 kcal",prot:"~8g",hidr:"~30g",gord:"~10g",tip:"4-5 bolachas com manteiga de amendoim. Fácil de levar para o trabalho."},
+  {name:"Requeijão + mel + fruta",kcal:"~280 kcal",prot:"~22g",hidr:"~25g",gord:"~4g",tip:"Pode ser lanche ou antes de dormir. Proteína de absorção lenta."},
+  {name:"Omelete simples com ovos e queijo",kcal:"~280 kcal",prot:"~22g",hidr:"~5g",gord:"~14g",tip:"2 ovos + queijo numa frigideira. 5 minutos. Bom para quando estás em casa."},
+  {name:"Queijo flamengo + fruta",kcal:"~250 kcal",prot:"~15g",hidr:"~20g",gord:"~10g",tip:"Simples e rápido. Boa opção para levar para o trabalho sem preparação nenhuma."},
+  {name:"Pão integral + manteiga de amendoim + banana",kcal:"~380 kcal",prot:"~12g",hidr:"~55g",gord:"~14g",tip:"2 fatias de pão com manteiga de amendoim e banana às rodelas. Muito calórico e saciante."},
+];
+const fDinners = [
+  {name:"Arroz de frango",time:"30 min",kcal:"~750 kcal",prot:"~55g",hidr:"~90g",gord:"~12g",ing:"300g arroz + 500g frango + legumes congelados + alho + azeite",tip:"O clássico. Tempera bem com sal, alho e pimentão. Faz sempre para dois dias."},
+  {name:"Massa com carne picada",time:"25 min",kcal:"~850 kcal",prot:"~55g",hidr:"~90g",gord:"~22g",ing:"260g massa + 400g carne picada + polpa de tomate + alho",tip:"Fácil e muito calórico. Adiciona queijo ralado por cima."},
+  {name:"Bacalhau com batata e ovo",time:"35 min",kcal:"~700 kcal",prot:"~60g",hidr:"~65g",gord:"~14g",ing:"400g bacalhau + 500g batata + 2 ovos + azeite + cebola",tip:"Cozinhas a batata, juntas o bacalhau desfiado e ovos mexidos."},
+  {name:"Salmão com arroz e brócolos",time:"25 min",kcal:"~700 kcal",prot:"~50g",hidr:"~75g",gord:"~18g",ing:"300g salmão + 250g arroz + brócolos + limão + azeite",tip:"Salmão rico em ómega-3, ótimo para recuperação. Vai ao forno 20 min."},
+  {name:"Frango no forno com batata-doce",time:"45 min",kcal:"~750 kcal",prot:"~60g",hidr:"~70g",gord:"~10g",ing:"500g frango + 400g batata-doce + temperos + azeite",tip:"Pões tudo no forno e esqueces. Batata-doce excelente para hidratos."},
+  {name:"Frango salteado com massa e cogumelos",time:"25 min",kcal:"~750 kcal",prot:"~55g",hidr:"~80g",gord:"~12g",ing:"200g massa + 400g frango + cogumelos + alho + azeite + molho de soja",tip:"Salteias o frango e cogumelos, juntas a massa já cozida. Rápido e muito saboroso."},
+  {name:"Omelete grande com batata e legumes",time:"20 min",kcal:"~600 kcal",prot:"~30g",hidr:"~45g",gord:"~18g",ing:"4 ovos + 300g batata + pimento + cebola + azeite",tip:"Batata ao micro-ondas 5 min, depois tudo na frigideira. Tipo tortilha espanhola simples."},
+  {name:"Arroz de peixe branco",time:"30 min",kcal:"~700 kcal",prot:"~50g",hidr:"~85g",gord:"~8g",ing:"250g arroz + 400g pescada ou corvina + cebola + tomate + azeite",tip:"Cozinhas o peixe diretamente com o arroz. Simples e muito proteico."},
+  {name:"Carne salteada com arroz e brócolos",time:"25 min",kcal:"~750 kcal",prot:"~55g",hidr:"~75g",gord:"~14g",ing:"400g carne de vaca em tiras + 250g arroz + brócolos + alho + azeite",tip:"Salteias a carne em lume alto durante 5-6 min. Arroz e brócolos à parte."},
+  {name:"Massa com salmão e espinafres",time:"20 min",kcal:"~750 kcal",prot:"~50g",hidr:"~80g",gord:"~20g",ing:"260g massa + 300g salmão + espinafres + alho + natas light + azeite",tip:"Salmão em pedaços salteados com alho, juntas os espinafres e a massa já cozida."},
+];
+const fBeforeBed = [
+  {name:"Requeijão + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~20g",gord:"~2g",tip:"A melhor opção. O requeijão tem caseína — proteína que absorve devagar durante o sono."},
+  {name:"Queijo cottage + fruta",kcal:"~220 kcal",prot:"~22g",hidr:"~20g",gord:"~4g",tip:"Muito proteico e leve. Adiciona fruta para tornar mais apetecível. Alternativa ao requeijão."},
+  {name:"Iogurte grego + mel",kcal:"~250 kcal",prot:"~18g",hidr:"~25g",gord:"~3g",tip:"Opção mais simples. Menos proteína que o requeijão mas funciona bem."},
+  {name:"Leite quente + mel",kcal:"~220 kcal",prot:"~10g",hidr:"~30g",gord:"~4g",tip:"Menos proteína mas ajuda a adormecer. Para os dias que não tens fome."},
+  {name:"Ovos cozidos",kcal:"~140 kcal",prot:"~12g",hidr:"~1g",gord:"~8g",tip:"2 ovos cozidos. Opção mais leve para quando já comeste muito durante o dia."},
+  {name:"Queijo cottage + mel + nozes",kcal:"~260 kcal",prot:"~24g",hidr:"~15g",gord:"~10g",tip:"O mel tira o sabor ácido e as nozes adicionam gordura boa. Uma das melhores combinações."},
+  {name:"Batido de leite + requeijão + mel",kcal:"~280 kcal",prot:"~22g",hidr:"~25g",gord:"~4g",tip:"Bates leite 200ml com requeijão 100g e mel. Fica cremoso. Bom para quando não tens fome mas queres proteína."},
+  {name:"Skyr natural + mel",kcal:"~200 kcal",prot:"~20g",hidr:"~20g",gord:"~1g",tip:"O skyr tem ainda mais proteína que o iogurte grego. Encontras no Lidl ou Continente."},
+  {name:"Leite quente com cacau sem açúcar",kcal:"~180 kcal",prot:"~10g",hidr:"~20g",gord:"~4g",tip:"300ml de leite quente com uma colher de cacau em pó puro. Sem açúcar. Ajuda a relaxar antes de dormir."},
+  {name:"Pudim de proteína",kcal:"~180 kcal",prot:"~20g",hidr:"~10g",gord:"~3g",tip:"Tipo o Go Active do Pingo Doce. 20g de proteína prontas a comer, sem preparação nenhuma."},
+];
+
+// ═══════════════════════════════════════════════ ROTINA F HELPERS
+function fMacroRow(item) {
+  return `<div class="macro-row"><span class="tag tag-o">${item.kcal}</span><span class="tag tag-g">${item.prot} prot</span><span class="tag tag-b">${item.hidr} hidr</span>${item.gord?`<span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 8px;border-radius:4px;font-family:monospace;white-space:nowrap">${item.gord} gord</span>`:''}</div>`;
+}
+function fFoodCard(item) {
+  return `<div class="f-card"><div class="f-food-name">${item.name}</div>${fMacroRow(item)}<p class="f-food-ing"><strong>Ingredientes:</strong> ${item.ing||''}</p>${item.tip?`<p class="f-food-tip">💡 ${item.tip}</p>`:''}</div>`;
+}
+function fTimedCard(item) {
+  return `<div class="f-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div class="f-food-name" style="flex:1">${item.name}</div><span class="tag tag-g">⏱ ${item.time}</span></div>${fMacroRow(item)}<p class="f-food-ing"><strong>Ingredientes:</strong> ${item.ing}</p>${item.tip?`<p class="f-food-tip">💡 ${item.tip}</p>`:''}</div>`;
+}
+function fGreenBox(html) {
+  return `<div class="f-green-box">${html}</div>`;
+}
+
+// ═══════════════════════════════════════════════ ROTINA F LOGIC
+function switchTabF(id, btn) {
+  document.querySelectorAll('.f-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.f-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+let fCurrentMeal = 'weekday';
+function renderFMealTabs() {
+  document.getElementById('f-meal-tabs').innerHTML = fMealKeys.map(k=>`<button class="f-sub-tab${k===fCurrentMeal?' active-o':''}" onclick="switchMealF('${k}',this)">${fMealPlans[k].label}</button>`).join('');
+}
+function renderFMealContent() {
+  const m = fMealPlans[fCurrentMeal];
+  document.getElementById('f-meal-content').innerHTML = `<h2 style="font-size:18px;color:#fff;margin-bottom:4px">${m.title}</h2><p style="font-size:12px;color:#777;margin-bottom:8px;font-family:monospace">${m.sub}</p><span class="tag tag-o">${m.total}</span><div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">${m.meals.map(item=>`<div class="f-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">${item.e}</span><span style="font-size:12px;color:#999;font-family:monospace">${item.time}</span></div><span class="tag tag-o">${item.kcal}</span></div><p style="font-size:14px;color:#fff;margin:0 0 6px;font-weight:bold">${item.food}</p>${item.tip?`<p style="font-size:12px;color:#555;line-height:1.5;font-style:italic;margin:0">${item.tip}</p>`:''}</div>`).join('')}</div>`;
+}
+function switchMealF(key, btn) {
+  fCurrentMeal = key;
+  document.querySelectorAll('.f-sub-tab').forEach(b=>b.classList.remove('active-o'));
+  btn.classList.add('active-o');
+  renderFMealContent();
+}
+
+let fCurrentRef = 'pAlmoco';
+const fRefTabs = [['pAlmoco','🌅 P. Almoço'],['almoco','☀️ Almoços'],['lanches','🕓 Lanches'],['jantares','🌙 Jantares'],['dormir','😴 Antes de dormir']];
+function renderFRefTabs() {
+  document.getElementById('f-ref-tabs').innerHTML = fRefTabs.map(([id,label])=>`<button class="f-ref-tab${id===fCurrentRef?' active':''}" onclick="switchRefF('${id}',this)">${label}</button>`).join('');
+}
+function renderFRefContent() {
+  const el = document.getElementById('f-ref-content');
+  const descs = {pAlmoco:'A refeição mais importante do dia. Tem de ser densa — é aqui que começas a construir as calorias.',almoco:'Durante a semana o almoço são as sobras do jantar. Mas se estiveres em casa ou precisares de improvisar, aqui tens 10 opções.',lanches:'Chegas a casa do trabalho e lanches. Foca nos que têm mais proteína.',jantares:'Faz sempre o dobro — metade é o almoço de amanhã. Roda estas 10 refeições durante a semana.',dormir:'A última refeição do dia. O objetivo é dar proteína ao corpo para recuperar durante o sono.'};
+  const boxes = {almoco:fGreenBox('<strong>Lembra-te:</strong> a prioridade durante a semana são as sobras do jantar. Estas opções são para quando isso não for possível.'),lanches:fGreenBox('<strong>No trabalho:</strong> iogurte grego, fruta, nozes, bolachas de arroz e ovos cozidos não precisam de frigorífico por algumas horas.'),jantares:fGreenBox('<strong>Dica:</strong> ao domingo cozinha uma base de arroz ou massa em quantidade para facilitar os jantares da semana. Dura 4-5 dias no frigorífico.'),dormir:fGreenBox('<strong>Melhor opção:</strong> requeijão ou queijo cottage. São os mais ricos em caseína, a proteína ideal para tomar antes de dormir.')};
+  const lists = {pAlmoco:fBreakfasts.map(fFoodCard).join(''),almoco:fLunches.map(fTimedCard).join(''),lanches:fSnacks.map(fFoodCard).join(''),jantares:fDinners.map(fTimedCard).join(''),dormir:fBeforeBed.map(fFoodCard).join('')};
+  el.innerHTML = `<p style="font-size:13px;color:#777;margin-bottom:16px;line-height:1.6">${descs[fCurrentRef]}</p><div class="f-card-list">${lists[fCurrentRef]}</div>${boxes[fCurrentRef]||''}`;
+}
+function switchRefF(id, btn) {
+  fCurrentRef = id;
+  document.querySelectorAll('.f-ref-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFRefContent();
+}
+
+// ═══════════════════════════════════════════════ ROTINA M DATA
+const mDays = [
+  {short:"SEG",label:"Cardio\n+ Core",color:"#E05A5A",emoji:"🔥"},
+  {short:"TER",label:"Lower\nBody",color:"#E8A020",emoji:"🦵"},
+  {short:"QUA",label:"Descanso",color:"#444",emoji:null},
+  {short:"QUI",label:"Upper\nBody",color:"#E05A5A",emoji:"💪"},
+  {short:"SEX",label:"Descanso",color:"#444",emoji:null},
+  {short:"SAB",label:"Full\nBody\n+ Pesos",color:"#C084FC",emoji:"⚡"},
+  {short:"DOM",label:"Meal\nPrep",color:"#4ADE80",emoji:"🥗"},
+];
+const mDayInfo = [
+  "Cardio + core sem equipamento. Podes fazer dentro de casa ou sair para uma caminhada rápida de 30 min.",
+  "Pernas e glúteos com peso corporal. Agachamentos, lunges, glute bridge. Não precisas de nada.",
+  "Descanso. Caminhada leve se quiseres, mas sem treino estruturado. O corpo recupera aqui.",
+  "Upper body com flexões e variantes. Inclui costas com remada de toalha. Casa ou exterior.",
+  "Descanso. Se fizeste bem os 3 treinos anteriores, mereces. Hidrata e dorme bem.",
+  "O único dia com pesos — aproveita ao máximo. Exercícios compostos, cargas maiores, mais intensidade.",
+  "Domingo = meal prep. Prepara as marmitas da semana. 1h–1h30 agora poupa 5 dias de stress.",
+];
+const mTreinos = [
+  {nome:"Cardio + Core",color:"#E05A5A",onde:"Casa ou exterior",duracao:"~45 min",desc:"Sem equipamento. Cardio de baixo impacto + trabalho de core. Ideal para Segunda quando ainda estás a arrancar a semana.",exercicios:["Saltos à corda ou jumping jacks — 3x 3 min (ou caminhada rápida 30 min se preferires sair)","Prancha — 3x 40s","Crunch bicicleta — 3x 20 reps","Mountain climbers — 3x 20 reps","Dead bug — 3x 10 reps por lado","Leg raises deitada — 3x 15 reps"]},
+  {nome:"Lower Body",color:"#E8A020",onde:"Casa ou exterior",duracao:"~50 min",desc:"Tudo com peso corporal. Os músculos das pernas são os maiores do corpo — trabalhar aqui queima mais calorias em repouso.",exercicios:["Agachamento — 4x 15 reps","Lunges alternados — 3x 12 reps por perna","Glute bridge — 4x 15 reps","Sumo squat — 3x 15 reps","Step-ups numa cadeira ou degrau — 3x 12 reps por perna","Wall sit — 3x 45s","Elevação de gémeos em pé — 3x 20 reps"]},
+  {nome:"Upper Body",color:"#E05A5A",onde:"Casa ou exterior",duracao:"~45 min",desc:"Flexões em variantes, trabalho de costas com peso corporal e ombros. Sem ginásio, mas eficaz.",exercicios:["Flexões normais — 4x máximo (até à falha)","Flexões inclinadas (pés em cadeira) — 3x 8–10 reps","Flexões diamante — 3x 10 reps (tríceps)","Remada com toalha numa porta ou barra baixa — 4x 12 reps","Pike push-up (ombros) — 3x 10 reps","Dips numa cadeira — 3x 12 reps","Superman deitada — 3x 15 reps (lombar e costas)"]},
+  {nome:"Full Body + Pesos",color:"#C084FC",onde:"Com acesso a pesos",duracao:"~55 min",desc:"O único dia com pesos. Aproveita para trabalhar cargas maiores em movimentos compostos. Maior estímulo muscular da semana.",exercicios:["Agachamento com halteres — 4x 12 reps","Romanian deadlift — 4x 12 reps","Remada curvada — 4x 10 reps","Press ombros sentada — 3x 12 reps","Supino halteres no chão — 3x 12 reps","Curl bíceps — 3x 12 reps","Extensão tríceps — 3x 12 reps","Farmers walk ou carregamento — 3x 30m ou 40s"]},
+];
+const mPequenoAlmocos = [
+  {nome:"Aveia com leite + banana + mel",kcal:"~320 kcal",prot:"~12g",hidr:"~52g",gord:"~6g",ing:"Aveia 50g + leite 200ml + banana + mel",nota:"Adiciona canela por cima. Aqueces aveia com leite no micro-ondas 2 min e metes o resto por cima."},
+  {nome:"Ovos mexidos + tosta integral + fruta",kcal:"~380 kcal",prot:"~24g",hidr:"~32g",gord:"~16g",ing:"2 ovos mexidos + 2 tostas integrais + 1 peça de fruta",nota:"Proteína de manhã reduz snacking ao longo do dia. Rápido de fazer."},
+  {nome:"Iogurte grego + granola + frutos vermelhos",kcal:"~300 kcal",prot:"~18g",hidr:"~35g",gord:"~6g",ing:"Iogurte grego 150g + granola 30g + frutos vermelhos + mel",nota:"Rápido de preparar. Usa pouca granola — tem bastantes calorias mas dá textura crocante."},
+  {nome:"Pão integral + ovo cozido + queijo fresco",kcal:"~340 kcal",prot:"~20g",hidr:"~32g",gord:"~12g",ing:"2 fatias pão integral + 1 ovo cozido + queijo fresco + tomate",nota:"Versão melhorada do pequeno-almoço dela com mais proteína. Simples e equilibrado."},
+  {nome:"Panquecas de aveia com banana",kcal:"~350 kcal",prot:"~16g",hidr:"~45g",gord:"~8g",ing:"Aveia 50g + 1 ovo + banana + leite + canela",nota:"Bates tudo e fazes na frigideira. Bom para fins de semana quando tens mais tempo."},
+  {nome:"Batido de leite + banana + aveia",kcal:"~320 kcal",prot:"~12g",hidr:"~50g",gord:"~6g",ing:"Leite 250ml + banana + aveia 40g + mel",nota:"Bates tudo. Rápido para dias com pressa. Adiciona cacau em pó se quiseres sabor a chocolate."},
+  {nome:"Pão integral + abacate + 2 ovos",kcal:"~450 kcal",prot:"~20g",hidr:"~30g",gord:"~22g",ing:"2 fatias pão integral + 1/2 abacate + 2 ovos cozidos ou estrelados",nota:"Versão melhorada do pequeno-almoço dela. Os ovos adicionam a proteína que falta ao abacate sozinho."},
+  {nome:"Skyr natural + frutos vermelhos + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~30g",gord:"~2g",ing:"Skyr 150g + frutos vermelhos + mel + granola 20g (opcional)",nota:"O skyr tem mais proteína que qualquer iogurte. Ótimo para dias que não tens muita fome de manhã."},
+  {nome:"Wrap integral com ovos mexidos e espinafres",kcal:"~360 kcal",prot:"~20g",hidr:"~35g",gord:"~12g",ing:"1 wrap integral + 2 ovos mexidos + espinafres + queijo fresco",nota:"Fazes os ovos com espinafres numa frigideira e enrolas no wrap. 10 minutos no total."},
+  {nome:"Overnight oats com frutos vermelhos",kcal:"~300 kcal",prot:"~14g",hidr:"~42g",gord:"~6g",ing:"Aveia 50g + iogurte grego 100g + leite + frutos vermelhos + mel",nota:"Preparas na noite anterior. De manhã já está pronto, só adicionas os frutos e mel por cima."},
+];
+const mMarmitas = [
+  {title:"Frango com arroz e legumes",prep:"Rende 4–5 marmitas",cor:"#E05A5A",kcal:"~430 kcal",prot:"~35g",hidr:"~45g",gord:"~8g",time:"45 min",passos:["Tempera 600g de peito de frango com alho, limão, paprika e azeite.","Assa no forno a 200°C por 25 min ou grelha.","Cozinha 300g de arroz basmati (fica mais solto).","Salteias brócolos, courgette ou feijão verde com alho.","Divide em doses: ~150g frango, 80g arroz cozido, legumes à vontade."]},
+  {title:"Salmão com batata-doce e espinafres",prep:"Rende 3–4 marmitas",cor:"#E8A020",kcal:"~480 kcal",prot:"~38g",hidr:"~40g",gord:"~18g",time:"40 min",passos:["Assa 500g de salmão com limão e ervas a 180°C por 20 min.","Assa 400g de batata-doce em cubos a 200°C por 25 min.","Salteia espinafres frescos com alho — murcham em 2 min.","Divide: 1 posta salmão, 100g batata-doce, espinafres."]},
+  {title:"Grão com legumes e ovo cozido",prep:"Rende 4 marmitas (opção económica)",cor:"#4ADE80",kcal:"~380 kcal",prot:"~22g",hidr:"~45g",gord:"~10g",time:"30 min",passos:["Usa 1 lata de grão escorrido (ou cozinha do zero).","Salteia com tomate, pimento, cebola, paprika fumada e azeite.","Coze 4 ovos (1 por marmita).","Junta folhas de espinafre ou rúcula por cima antes de fechar."]},
+  {title:"Massa integral com atum e legumes",prep:"Rende 4 marmitas",cor:"#C084FC",kcal:"~410 kcal",prot:"~28g",hidr:"~55g",gord:"~8g",time:"20 min",passos:["Cozinha 300g de massa integral al dente.","Mistura 2 latas de atum escorrido, tomate cherry, milho e azeitonas.","Tempera com azeite, limão e ervas.","Come fria ou aquece — fica bem das duas formas."]},
+  {title:"Frango com batata-doce e feijão preto",prep:"Rende 4 marmitas",cor:"#E05A5A",kcal:"~420 kcal",prot:"~35g",hidr:"~42g",gord:"~7g",time:"35 min",passos:["Tempera 500g de frango com cominhos, alho e azeite. Grelha ou vai ao forno.","Cozinha ou usa 1 lata de feijão preto escorrido.","Assa 400g de batata-doce cortada em cubos a 200°C por 20 min.","Divide em doses: frango, feijão e batata-doce. Opcional: coentros por cima."]},
+  {title:"Atum com quinoa e legumes grelhados",prep:"Rende 4 marmitas",cor:"#E8A020",kcal:"~400 kcal",prot:"~32g",hidr:"~40g",gord:"~9g",time:"30 min",passos:["Cozinha 250g de quinoa (fica o dobro depois de cozida).","Grelha pimento, curgete e beringela com azeite e sal.","Escorre 2 latas de atum.","Divide: quinoa + legumes grelhados + atum + fio de limão por cima."]},
+  {title:"Peru com massa integral e espinafres",prep:"Rende 4 marmitas",cor:"#C084FC",kcal:"~390 kcal",prot:"~34g",hidr:"~42g",gord:"~7g",time:"25 min",passos:["Cozinha 280g de massa integral al dente.","Salteia 500g de peito de peru em tiras com alho e azeite.","Junta espinafres frescos e deixa murchar 2 min.","Mistura tudo com a massa. Opcional: rala queijo por cima antes de fechar."]},
+  {title:"Bacalhau com grão e brócolos",prep:"Rende 4 marmitas",cor:"#4ADE80",kcal:"~410 kcal",prot:"~38g",hidr:"~38g",gord:"~10g",time:"40 min",passos:["Usa 400g de bacalhau demolhado. Cozinha em água 15 min e desfia.","Cozinha ou usa 1 lata de grão escorrido.","Cozinha brócolos a vapor 8 min — ficam mais firmes.","Junta tudo com azeite generoso e alho. Divide em doses."]},
+  {title:"Frango desfiado com lentilhas e cenoura",prep:"Rende 4–5 marmitas",cor:"#E05A5A",kcal:"~400 kcal",prot:"~36g",hidr:"~40g",gord:"~6g",time:"35 min",passos:["Cozinha 400g de peito de frango em água com sal e louro. Desfia.","Cozinha 200g de lentilhas verdes em água 25 min.","Salteia cenoura cortada em cubos com cebola e alho.","Mistura frango, lentilhas e cenoura. Tempera com cominho e paprika."]},
+  {title:"Omelete de claras com legumes e arroz integral",prep:"Rende 3 marmitas",cor:"#E8A020",kcal:"~350 kcal",prot:"~28g",hidr:"~38g",gord:"~4g",time:"20 min",passos:["Cozinha 200g de arroz integral.","Bate 8 claras de ovo com sal e pimenta.","Salteia espinafres, cogumelos e pimento numa frigideira.","Deita as claras por cima e faz tipo omelete grande. Divide com o arroz."]},
+];
+const mPequenoAlmocos = [
+  {nome:"Pão integral + abacate + 2 ovos",kcal:"~450 kcal",prot:"~20g",hidr:"~30g",gord:"~22g",ing:"2 fatias pão integral + ½ abacate + 2 ovos estrelados ou cozidos",nota:"Versão melhorada do pequeno-almoço dela. Os ovos adicionam a proteína que falta ao abacate sozinho."},
+  {nome:"Aveia com leite + banana + mel",kcal:"~320 kcal",prot:"~12g",hidr:"~52g",gord:"~6g",ing:"Aveia 50g + leite 200ml + banana + mel + canela",nota:"Adiciona canela por cima — fica melhor e ajuda a regular o açúcar no sangue."},
+  {nome:"Ovos mexidos + tosta integral + fruta",kcal:"~380 kcal",prot:"~24g",hidr:"~32g",gord:"~16g",ing:"2 ovos mexidos + 2 tostas integrais + 1 peça de fruta",nota:"Proteína de manhã reduz snacking ao longo do dia. Rápido de fazer."},
+  {nome:"Iogurte grego + granola + frutos vermelhos",kcal:"~300 kcal",prot:"~18g",hidr:"~35g",gord:"~6g",ing:"Iogurte grego 150g + granola 30g + frutos vermelhos + mel",nota:"Rápido de preparar. A granola dá textura crocante — usa pouca quantidade para não exagerar nas calorias."},
+  {nome:"Pão integral + ovo cozido + queijo fresco",kcal:"~340 kcal",prot:"~20g",hidr:"~32g",gord:"~12g",ing:"2 fatias pão integral + 1 ovo cozido + queijo fresco + tomate",nota:"Simples e proteico. Boa opção para os dias da semana quando não há muito tempo."},
+  {nome:"Panquecas de aveia com banana",kcal:"~350 kcal",prot:"~16g",hidr:"~45g",gord:"~8g",ing:"Aveia 50g + 1 ovo + banana + leite + canela",nota:"Bates tudo e fazes na frigideira. Bom para fins de semana quando tens mais tempo para cozinhar."},
+  {nome:"Batido de leite + banana + aveia",kcal:"~320 kcal",prot:"~12g",hidr:"~50g",gord:"~6g",ing:"Leite 250ml + banana + aveia 40g + mel",nota:"Bates tudo no liquidificador. Para dias com pressa. Adiciona cacau em pó se quiseres."},
+  {nome:"Skyr natural + frutos vermelhos + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~30g",gord:"~2g",ing:"Skyr 150g + frutos vermelhos + mel + granola 20g opcional",nota:"O skyr tem mais proteína que qualquer iogurte. Ótimo para dias que não tens muita fome de manhã."},
+  {nome:"Wrap integral com ovos mexidos e espinafres",kcal:"~360 kcal",prot:"~20g",hidr:"~35g",gord:"~12g",ing:"1 wrap integral + 2 ovos mexidos + espinafres + queijo fresco",nota:"Fazes os ovos com espinafres numa frigideira e enrolas no wrap. 10 minutos e está pronto."},
+  {nome:"Overnight oats com frutos vermelhos",kcal:"~300 kcal",prot:"~14g",hidr:"~42g",gord:"~6g",ing:"Aveia 50g + iogurte grego 100g + leite + frutos vermelhos + mel",nota:"Preparas na noite anterior. De manhã já está pronto — só adicionas os frutos vermelhos e mel por cima."},
+];
+
+  {nome:"Iogurte grego natural + fruta",kcal:"~180 kcal",prot:"~12g",hidr:"~20g",nota:"Adiciona canela — atenua o desejo de doce"},
+  {nome:"Ovo cozido + tosta integral",kcal:"~200 kcal",prot:"~14g",hidr:"~18g",nota:"Proteína de manhã reduz snacking à tarde"},
+  {nome:"Aveia com leite + banana",kcal:"~280 kcal",prot:"~12g",hidr:"~45g",nota:"Bom nos dias de treino de manhã"},
+  {nome:"Queijo fresco + fruta",kcal:"~160 kcal",prot:"~10g",hidr:"~18g",nota:"Rápido de preparar"},
+  {nome:"Batido de leite + banana + cacau",kcal:"~220 kcal",prot:"~10g",hidr:"~35g",nota:"Sem açúcar adicionado. Bates no liquidificador e bebes a caminho. Energia rápida para começar o dia."},
+  {nome:"Tosta integral com queijo fresco e tomate cherry",kcal:"~190 kcal",prot:"~12g",hidr:"~22g",nota:"Rápida de preparar. O tomate cherry torna mais fresco e saciante."},
+  {nome:"Skyr natural com granola ligeira e frutos vermelhos",kcal:"~250 kcal",prot:"~18g",hidr:"~28g",nota:"O skyr tem mais proteína que o iogurte grego. A granola dá textura — usa pouca quantidade."},
+  {nome:"Panquecas de aveia simples (2 pequenas)",kcal:"~240 kcal",prot:"~12g",hidr:"~32g",nota:"Aveia 40g + 1 ovo + leite. Fazes na frigideira em 10 min. Podes preparar na véspera."},
+  {nome:"Pão de centeio com manteiga de amendoim",kcal:"~220 kcal",prot:"~8g",hidr:"~25g",nota:"O pão de centeio sacia mais que o normal. A manteiga de amendoim dá gordura boa e proteína."},
+  {nome:"Mini omelete de claras com espinafres",kcal:"~150 kcal",prot:"~16g",hidr:"~4g",nota:"3 claras de ovo + espinafres numa frigideira. 5 minutos. Ótimo para dias de treino de manhã."},
+];
+const mLanchesTarde = [
+  {nome:"Iogurte grego + 1 colher de manteiga de amendoim",kcal:"~200 kcal",prot:"~14g",hidr:"~12g",nota:"Satisfaz o desejo de doce com proteína"},
+  {nome:"Fruta + punhado de frutos secos",kcal:"~180 kcal",prot:"~5g",hidr:"~22g",nota:"Maçã, pera ou laranja funcionam bem"},
+  {nome:"Ovo cozido + pepino ou cenoura",kcal:"~120 kcal",prot:"~9g",hidr:"~8g",nota:"Para dias com mais apetite"},
+  {nome:"Tosta integral com queijo fresco e tomate",kcal:"~180 kcal",prot:"~10g",hidr:"~22g",nota:"Alternativa ao docinho do fim do almoço"},
+  {nome:"Cenoura e pepino com homus",kcal:"~160 kcal",prot:"~6g",hidr:"~14g",nota:"O homus é rico em proteína vegetal. Ótimo para saciar entre refeições sem exagerar nas calorias."},
+  {nome:"Requeijão com mel e nozes",kcal:"~200 kcal",prot:"~14g",hidr:"~14g",nota:"A combinação de proteína e gordura boa mantém a saciedade até ao jantar."},
+  {nome:"Bolachas de arroz com queijo fresco",kcal:"~170 kcal",prot:"~8g",hidr:"~22g",nota:"3-4 bolachas de arroz com queijo fresco. Leve e saciante. Fácil de levar para a universidade."},
+  {nome:"Banana com iogurte grego",kcal:"~190 kcal",prot:"~12g",hidr:"~28g",nota:"A banana dá energia e o iogurte proteína. Bom para lanchar antes de treinar."},
+  {nome:"Amêndoas e 1 peça de fruta",kcal:"~180 kcal",prot:"~6g",hidr:"~20g",nota:"20-25 amêndoas + maçã ou pera. Não precisas de frigorífico. Prático para levar."},
+  {nome:"Queijo cottage com tomate cherry e orégãos",kcal:"~150 kcal",prot:"~16g",hidr:"~8g",nota:"Rico em proteína e muito baixo em calorias. Perfeito para os dias com menos apetite."},
+];
+const mJantares = [
+  {nome:"Omelete de 3 ovos com espinafres e queijo",kcal:"~350 kcal",prot:"~28g",hidr:"~8g",gord:"~22g",time:"10 min",nota:"Bom para dias sem energia para cozinhar. Rápido e muito proteico."},
+  {nome:"Sopa de legumes + posta de bacalhau grelhado",kcal:"~380 kcal",prot:"~35g",hidr:"~25g",gord:"~8g",time:"20 min",nota:"A sopa ajuda a sentir saciedade com poucas calorias."},
+  {nome:"Frango grelhado + salada grande + batata-doce",kcal:"~420 kcal",prot:"~40g",hidr:"~38g",gord:"~7g",time:"25 min",nota:"Janta de treino — mais hidratos para recuperação."},
+  {nome:"Sardinhas grelhadas + broa + salada",kcal:"~390 kcal",prot:"~32g",hidr:"~28g",gord:"~14g",time:"15 min",nota:"Proteína barata e boa gordura. Sardinhas são das melhores fontes de ómega-3."},
+  {nome:"Wrap integral com peru, alface, tomate e iogurte",kcal:"~360 kcal",prot:"~30g",hidr:"~38g",gord:"~6g",time:"10 min",nota:"Para dias mais leves. O iogurte substitui o molho com muito menos calorias."},
+  {nome:"Sopa + ovo escalfado + tosta integral",kcal:"~310 kcal",prot:"~18g",hidr:"~28g",gord:"~8g",time:"15 min",nota:"Jantar leve, bom para dias de descanso ou quando não há muita fome."},
+  {nome:"Salmão no forno com espinafres e batata-doce",kcal:"~420 kcal",prot:"~38g",hidr:"~30g",gord:"~16g",time:"25 min",nota:"Salmão em folha de alumínio com limão e alho a 180°C. Espinafres salteados. Batata-doce assada."},
+  {nome:"Frango ao limão com brócolos e arroz integral",kcal:"~400 kcal",prot:"~42g",hidr:"~30g",gord:"~7g",time:"30 min",nota:"Frango marinado em limão e alho, grelhado. Brócolos a vapor, arroz integral. Leve e muito proteico."},
+  {nome:"Sopa proteica de legumes com frango desfiado",kcal:"~330 kcal",prot:"~30g",hidr:"~22g",gord:"~6g",time:"25 min",nota:"Sopa de curgete, cenoura e cebola com frango desfiado dentro. Sacia muito com poucas calorias."},
+  {nome:"Atum grelhado com salada de grão e tomate",kcal:"~380 kcal",prot:"~40g",hidr:"~25g",gord:"~9g",time:"15 min",nota:"Posta de atum fresco ou em lata. Salada de grão com tomate, cebola e azeite. Rápido e nutritivo."},
+];
+const mDoces = [
+  {nome:"Chocolate negro 70%+ — 2 quadrados",kcal:"~80 kcal",prot:"~1g",hidr:"~8g",gord:"~5g",nota:"Melhor opção se precisares mesmo de doce. A gordura do cacau abranda a absorção do açúcar."},
+  {nome:"Mug cake de aveia e cacau",kcal:"~180 kcal",prot:"~8g",hidr:"~24g",gord:"~5g",nota:"Aveia 40g + 1 ovo + 1 colher de cacau + mel + leite. Mistura tudo numa caneca e vai ao micro-ondas 2 min. Fica esponjoso e quente."},
+  {nome:"Bolinhas de proteína caseiras",kcal:"~160 kcal",prot:"~6g",hidr:"~18g",gord:"~6g",nota:"Aveia 30g + 1 colher manteiga de amendoim + mel + coco ralado. Mistura e faz bolinhas. Vai ao frigorífico 30 min. Sem forno."},
+  {nome:"Crepe de aveia com frutos vermelhos",kcal:"~190 kcal",prot:"~10g",hidr:"~22g",gord:"~5g",nota:"Aveia 40g batida + 1 ovo + leite. Fazes finos na frigideira. Recheia com frutos vermelhos e iogurte grego por cima."},
+  {nome:"Pudim de chia com leite de aveia",kcal:"~170 kcal",prot:"~5g",hidr:"~22g",gord:"~6g",nota:"3 colheres de chia + leite de aveia 200ml + mel. Deixas no frigorífico 4h ou de véspera. Fica com textura de pudim cremoso."},
+  {nome:"Cookie de aveia e banana (sem forno)",kcal:"~150 kcal",prot:"~4g",hidr:"~22g",gord:"~4g",nota:"Amassa banana + aveia 30g + pedaços de chocolate negro. Forma cookies e congela 1h. Sem açúcar, sem forno, sem culpa."},
+  {nome:"Muffin de banana e aveia (caseiro)",kcal:"~200 kcal",prot:"~7g",hidr:"~28g",gord:"~5g",nota:"1 banana + 1 ovo + aveia 50g + fermento + mel. Bates tudo e vai ao forno 18 min a 180°C. Rende 3-4 muffins fofos."},
+  {nome:"Bolacha de aveia e banana (caseira)",kcal:"~120 kcal",prot:"~3g",hidr:"~20g",gord:"~3g",nota:"Amassa 1 banana com 40g aveia, fazes bolinhas e vai ao forno 12 min a 180°C. Sem farinha nem açúcar."},
+  {nome:"Maçã assada com canela e mel",kcal:"~110 kcal",prot:"~0g",hidr:"~26g",gord:"~0g",nota:"Maçã cortada ao meio, canela e fio de mel, micro-ondas 3 min. Sacia o desejo de doce quente."},
+  {nome:"Brownie de feijão preto e cacau",kcal:"~180 kcal",prot:"~8g",hidr:"~22g",gord:"~5g",nota:"1 lata feijão preto escorrido + 2 ovos + 2 colheres cacau + mel + fermento. Bates tudo e vai ao forno 20 min. Surpreendentemente bom e muito fofo."},
+];
+
+// ═══════════════════════════════════════════════ ROTINA M LOGIC
+let mActiveDay = null;
+let mOpenTreino = null;
+let mOpenMarmita = null;
+let mCurrentRefeicao = 'pAlmoco';
+
+function mPequenoAlmocoCard(item) {
+  return `<div class="m-card"><div class="m-item">${item.nome}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><p style="font-size:13px;color:#999;margin:10px 0 6px;line-height:1.5"><strong style="color:#666">Ingredientes:</strong> ${item.ing}</p><div class="m-item-note">${item.nota}</div></div>`;
+}
+
+function switchTabM(id, btn) {
+  document.querySelectorAll('.m-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function renderMDays() {
+  document.getElementById('m-day-row').innerHTML = mDays.map((d,i)=>`
+    <button class="m-day-btn" style="border-color:${mActiveDay===i?d.color:'#222'};background:${mActiveDay===i?'#222':'#1a1a1a'}" onclick="setActiveDayM(${i})">
+      <div class="m-day-name">${d.short}</div>
+      <div class="m-day-dot" style="background:${d.color}"></div>
+      <div class="m-day-label" style="color:${d.color}">${d.label}</div>
+      ${d.emoji?`<div class="m-day-emoji">${d.emoji}</div>`:''}
+    </button>`).join('');
+}
+
+function setActiveDayM(i) {
+  mActiveDay = mActiveDay === i ? null : i;
+  renderMDays();
+  const el = document.getElementById('m-day-info');
+  if (mActiveDay !== null) {
+    const d = mDays[mActiveDay];
+    el.innerHTML = `<div style="background:#1a1a1a;border-left:3px solid ${d.color};border-radius:0 12px 12px 0;padding:14px 18px;margin-bottom:20px"><div style="color:${d.color};font-weight:700;font-size:15px;margin-bottom:6px">${d.label.replace(/\n/g,' ')} ${d.emoji||''}</div><div style="color:#aaa;font-size:13px;line-height:1.6">${mDayInfo[mActiveDay]}</div></div>`;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function renderMTreinos() {
+  document.getElementById('m-treinos-list').innerHTML = mTreinos.map(t=>`
+    <div class="m-accordion-wrap">
+      <button class="m-accordion-btn" style="border-color:${mOpenTreino===t.nome?t.color:'#2a2a2a'};border-radius:${mOpenTreino===t.nome?'14px 14px 0 0':'14px'}" onclick="toggleTreinoM('${t.nome}')">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="color:${t.color};font-weight:700;font-size:15px">${t.nome}</div><div style="color:#555;font-size:11px;margin-top:3px;font-family:monospace">${t.onde} · ${t.duracao}</div></div>
+          <div style="color:#444;font-size:18px">${mOpenTreino===t.nome?'−':'+'}</div>
+        </div>
+      </button>
+      ${mOpenTreino===t.nome?`<div class="m-accordion-body" style="border:1px solid ${t.color};border-top:none">
+        <div style="color:#888;font-size:12px;line-height:1.6;margin-bottom:14px">${t.desc}</div>
+        ${t.exercicios.map((ex,j)=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:${j<t.exercicios.length-1?'1px solid #1f1f1f':'none'}"><div style="width:6px;height:6px;border-radius:50%;background:${t.color};margin-top:5px;flex-shrink:0"></div><div style="color:#bbb;font-size:13px;line-height:1.5">${ex}</div></div>`).join('')}
+      </div>`:''}
+    </div>`).join('');
+}
+
+function toggleTreinoM(nome) {
+  mOpenTreino = mOpenTreino === nome ? null : nome;
+  renderMTreinos();
+}
+
+function switchRefeicaoM(tab, btn) {
+  mCurrentRefeicao = tab;
+  document.querySelectorAll('.m-ref-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMRefeicoes();
+}
+
+function mPequenoAlmocoCard(item) {
+  return `<div class="m-card"><div class="m-item">${item.nome}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><p style="font-size:13px;color:#999;margin:10px 0 6px;line-height:1.5"><strong style="color:#666">Ingredientes:</strong> ${item.ing}</p><div class="m-item-note">${item.nota}</div></div>`;
+}
+
+function mSimpleCard(item, kcalColor) {
+  const macros = `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
+    <span style="font-size:11px;color:${kcalColor};background:${kcalColor}22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span>
+    <span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span>
+    <span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span>
+    ${item.gord?`<span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span>`:''}
+  </div>`;
+  return `<div class="m-card"><div class="m-item">${item.nome}</div>${macros}<div class="m-item-note" style="margin-top:8px">${item.nota}</div></div>`;
+}
+function mJantarCard(item) {
+  return `<div class="m-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div class="m-item" style="flex:1">${item.nome}</div><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace;white-space:nowrap">⏱ ${item.time}</span></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><div class="m-item-note" style="margin-top:8px">${item.nota}</div></div>`;
+}
+
+let mCurrentRefeicao = 'pAlmoco';
+
+function renderMRefeicoes() {
+  const el = document.getElementById('m-ref-content');
+  if (mCurrentRefeicao === 'pAlmoco') {
+    el.innerHTML = `<div class="m-section-note">O pequeno-almoço dela de segunda a sexta é pão com abacate + meia de leite — é razoável mas tem pouca proteína (~10g). O ideal é adicionar 1-2 ovos ou queijo fresco ao lado para chegar a 18-20g. Abaixo tens 10 opções completas para variar.</div>${mPequenoAlmocos.map(mPequenoAlmocoCard).join('')}`;
+  } else if (mCurrentRefeicao === 'marmitas') {
+    el.innerHTML = `<div class="m-section-note">Preparas ao domingo. Cada ideia rende 3–5 doses. Guarda no frio até 4 dias.</div>`+mMarmitas.map((m,i)=>`
+      <div class="m-accordion-wrap">
+        <button class="m-accordion-btn" style="border-color:${mOpenMarmita===i?m.cor:'#2a2a2a'};border-radius:${mOpenMarmita===i?'14px 14px 0 0':'14px'}" onclick="toggleMarmitaM(${i})">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="color:${m.cor};font-weight:700;font-size:14px">${m.title}</div><div style="color:#555;font-size:11px;margin-top:3px;font-family:monospace">${m.prep} · ⏱ ${m.time}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px"><span style="font-size:10px;color:${m.cor};background:${m.cor}22;padding:1px 6px;border-radius:3px;font-family:monospace">${m.kcal}/dose</span><span style="font-size:10px;color:#4ade80;background:#4ade8022;padding:1px 6px;border-radius:3px;font-family:monospace">${m.prot} prot</span><span style="font-size:10px;color:#60a5fa;background:#60a5fa22;padding:1px 6px;border-radius:3px;font-family:monospace">${m.hidr} hidr</span><span style="font-size:10px;color:#f59e0b;background:#f59e0b22;padding:1px 6px;border-radius:3px;font-family:monospace">${m.gord} gord</span></div></div>
+            <div style="color:#444;font-size:18px">${mOpenMarmita===i?'−':'+'}</div>
+          </div>
+        </button>
+        ${mOpenMarmita===i?`<div class="m-accordion-body" style="border:1px solid ${m.cor};border-top:none">${m.passos.map((p,j)=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:${j<m.passos.length-1?'1px solid #1f1f1f':'none'}"><div style="width:18px;height:18px;border-radius:50%;background:#2a2a2a;color:${m.cor};font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:monospace">${j+1}</div><div style="color:#bbb;font-size:13px;line-height:1.5">${p}</div></div>`).join('')}</div>`:''}
+      </div>`).join('');
+  } else if (mCurrentRefeicao === 'lanches') {
+    el.innerHTML = `<div class="m-group-label">☀️ LANCHE DA MANHÃ</div>${mLanchesManha.map(i=>mSimpleCard(i,'#E8A020')).join('')}<div class="m-group-label" style="margin-top:24px">🌤️ LANCHE DA TARDE</div>${mLanchesTarde.map(i=>mSimpleCard(i,'#E8A020')).join('')}`;
+  } else if (mCurrentRefeicao === 'jantares') {
+    el.innerHTML = `<div class="m-section-note">Jantares leves. Mais proteína e legumes, menos hidratos do que ao almoço.</div>${mJantares.map(mJantarCard).join('')}`;
+  } else if (mCurrentRefeicao === 'doces') {
+    el.innerHTML = `<div style="background:#1a1a1a;border-left:3px solid #C084FC;border-radius:0 12px 12px 0;padding:14px 18px;margin-bottom:20px"><div style="color:#C084FC;font-weight:700;font-size:14px;margin-bottom:6px">Para o docinho ao fim do almoço</div><div style="color:#888;font-size:13px;line-height:1.6">A ideia não é eliminar — é substituir por algo que satisfaça sem rebentar o dia. Principalmente ao fim de semana quando o hábito aparece mais.</div></div>${mDoces.map(i=>mSimpleCard(i,'#C084FC')).join('')}`;
+  }
+}
+
+function toggleMarmitaM(i) {
+  mOpenMarmita = mOpenMarmita === i ? null : i;
+  renderMRefeicoes();
+}
+
+// ═══════════════════════════════════════════════ INIT
+// Rotina F
+document.getElementById('f-exercises').innerHTML = fExercises.map((ex,i)=>`
+  <div class="f-card" style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px">
+    <div style="min-width:28px;height:28px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#777;font-family:monospace">${i+1}</div>
+    <div style="flex:1">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:14px;color:#fff;font-weight:bold">${ex.name}</span>
+        <span class="tag tag-g">${ex.sets}</span>
+      </div>
+      <div style="font-size:12px;color:#777;line-height:1.4">${ex.note}</div>
+    </div>
+  </div>`).join('');
+renderFMealTabs();
+renderFMealContent();
+renderFRefTabs();
+renderFRefContent();
+
+// Rotina M
+renderMDays();
+renderMTreinos();
+renderMRefeicoes();
+</script>
+</body>
+</html>
