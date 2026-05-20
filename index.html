@@ -525,19 +525,7 @@ const mMarmitas = [
   {title:"Frango desfiado com lentilhas e cenoura",prep:"Rende 4–5 marmitas",cor:"#E05A5A",kcal:"~400 kcal",prot:"~36g",hidr:"~40g",gord:"~6g",time:"35 min",passos:["Cozinha 400g de peito de frango em água com sal e louro. Desfia.","Cozinha 200g de lentilhas verdes em água 25 min.","Salteia cenoura cortada em cubos com cebola e alho.","Mistura frango, lentilhas e cenoura. Tempera com cominho e paprika."]},
   {title:"Omelete de claras com legumes e arroz integral",prep:"Rende 3 marmitas",cor:"#E8A020",kcal:"~350 kcal",prot:"~28g",hidr:"~38g",gord:"~4g",time:"20 min",passos:["Cozinha 200g de arroz integral.","Bate 8 claras de ovo com sal e pimenta.","Salteia espinafres, cogumelos e pimento numa frigideira.","Deita as claras por cima e faz tipo omelete grande. Divide com o arroz."]},
 ];
-const mPequenoAlmocos = [
-  {nome:"Pão integral + abacate + 2 ovos",kcal:"~450 kcal",prot:"~20g",hidr:"~30g",gord:"~22g",ing:"2 fatias pão integral + ½ abacate + 2 ovos estrelados ou cozidos",nota:"Versão melhorada do pequeno-almoço dela. Os ovos adicionam a proteína que falta ao abacate sozinho."},
-  {nome:"Aveia com leite + banana + mel",kcal:"~320 kcal",prot:"~12g",hidr:"~52g",gord:"~6g",ing:"Aveia 50g + leite 200ml + banana + mel + canela",nota:"Adiciona canela por cima — fica melhor e ajuda a regular o açúcar no sangue."},
-  {nome:"Ovos mexidos + tosta integral + fruta",kcal:"~380 kcal",prot:"~24g",hidr:"~32g",gord:"~16g",ing:"2 ovos mexidos + 2 tostas integrais + 1 peça de fruta",nota:"Proteína de manhã reduz snacking ao longo do dia. Rápido de fazer."},
-  {nome:"Iogurte grego + granola + frutos vermelhos",kcal:"~300 kcal",prot:"~18g",hidr:"~35g",gord:"~6g",ing:"Iogurte grego 150g + granola 30g + frutos vermelhos + mel",nota:"Rápido de preparar. A granola dá textura crocante — usa pouca quantidade para não exagerar nas calorias."},
-  {nome:"Pão integral + ovo cozido + queijo fresco",kcal:"~340 kcal",prot:"~20g",hidr:"~32g",gord:"~12g",ing:"2 fatias pão integral + 1 ovo cozido + queijo fresco + tomate",nota:"Simples e proteico. Boa opção para os dias da semana quando não há muito tempo."},
-  {nome:"Panquecas de aveia com banana",kcal:"~350 kcal",prot:"~16g",hidr:"~45g",gord:"~8g",ing:"Aveia 50g + 1 ovo + banana + leite + canela",nota:"Bates tudo e fazes na frigideira. Bom para fins de semana quando tens mais tempo para cozinhar."},
-  {nome:"Batido de leite + banana + aveia",kcal:"~320 kcal",prot:"~12g",hidr:"~50g",gord:"~6g",ing:"Leite 250ml + banana + aveia 40g + mel",nota:"Bates tudo no liquidificador. Para dias com pressa. Adiciona cacau em pó se quiseres."},
-  {nome:"Skyr natural + frutos vermelhos + mel",kcal:"~250 kcal",prot:"~20g",hidr:"~30g",gord:"~2g",ing:"Skyr 150g + frutos vermelhos + mel + granola 20g opcional",nota:"O skyr tem mais proteína que qualquer iogurte. Ótimo para dias que não tens muita fome de manhã."},
-  {nome:"Wrap integral com ovos mexidos e espinafres",kcal:"~360 kcal",prot:"~20g",hidr:"~35g",gord:"~12g",ing:"1 wrap integral + 2 ovos mexidos + espinafres + queijo fresco",nota:"Fazes os ovos com espinafres numa frigideira e enrolas no wrap. 10 minutos e está pronto."},
-  {nome:"Overnight oats com frutos vermelhos",kcal:"~300 kcal",prot:"~14g",hidr:"~42g",gord:"~6g",ing:"Aveia 50g + iogurte grego 100g + leite + frutos vermelhos + mel",nota:"Preparas na noite anterior. De manhã já está pronto — só adicionas os frutos vermelhos e mel por cima."},
-];
-
+const mLanchesManha = [
   {nome:"Iogurte grego natural + fruta",kcal:"~180 kcal",prot:"~12g",hidr:"~20g",nota:"Adiciona canela — atenua o desejo de doce"},
   {nome:"Ovo cozido + tosta integral",kcal:"~200 kcal",prot:"~14g",hidr:"~18g",nota:"Proteína de manhã reduz snacking à tarde"},
   {nome:"Aveia com leite + banana",kcal:"~280 kcal",prot:"~12g",hidr:"~45g",nota:"Bom nos dias de treino de manhã"},
@@ -653,10 +641,6 @@ function switchRefeicaoM(tab, btn) {
   renderMRefeicoes();
 }
 
-function mPequenoAlmocoCard(item) {
-  return `<div class="m-card"><div class="m-item">${item.nome}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><p style="font-size:13px;color:#999;margin:10px 0 6px;line-height:1.5"><strong style="color:#666">Ingredientes:</strong> ${item.ing}</p><div class="m-item-note">${item.nota}</div></div>`;
-}
-
 function mSimpleCard(item, kcalColor) {
   const macros = `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
     <span style="font-size:11px;color:${kcalColor};background:${kcalColor}22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span>
@@ -669,8 +653,6 @@ function mSimpleCard(item, kcalColor) {
 function mJantarCard(item) {
   return `<div class="m-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div class="m-item" style="flex:1">${item.nome}</div><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace;white-space:nowrap">⏱ ${item.time}</span></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span style="font-size:11px;color:#E05A5A;background:#E05A5A22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.kcal}</span><span style="font-size:11px;color:#4ade80;background:#4ade8022;padding:2px 7px;border-radius:4px;font-family:monospace">${item.prot} prot</span><span style="font-size:11px;color:#60a5fa;background:#60a5fa22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.hidr} hidr</span><span style="font-size:11px;color:#f59e0b;background:#f59e0b22;padding:2px 7px;border-radius:4px;font-family:monospace">${item.gord} gord</span></div><div class="m-item-note" style="margin-top:8px">${item.nota}</div></div>`;
 }
-
-let mCurrentRefeicao = 'pAlmoco';
 
 function renderMRefeicoes() {
   const el = document.getElementById('m-ref-content');
